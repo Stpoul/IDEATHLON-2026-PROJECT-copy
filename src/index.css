@@ -11,48 +11,44 @@
   --muted-foreground: #64748b;
   --success: #10B981;
   --danger: #ef4444;
-  --font-base: 16px; /* Base scaling variable */
+  --font-base: 16px;
 }
 
-/* Global scaling for Tailwind rem units */
 html {
   font-size: var(--font-base);
   transition: font-size 0.2s ease-in-out;
 }
 
-/* Dark Mode */
+/* Refined Dark Mode for Visibility */
 .dark {
   --background: #0f172a;
   --foreground: #f8fafc;
   --card: #1e293b;
   --border: #334155;
-  --muted-foreground: #94a3b8;
+  --muted-foreground: #cbd5e1; /* Brightened for visibility */
   --primary: #a29bfe;
 }
 
 /* Modern High Contrast Mode (Midnight & Cyan) */
-/* This provides AAA contrast while looking professional */
 .high-contrast {
   --background: #020617 !important;
   --foreground: #ffffff !important;
   --card: #0f172a !important;
-  --border: #38bdf8 !important; /* Bright Cyan border */
+  --border: #38bdf8 !important; 
   --primary: #38bdf8 !important;
-  --muted-foreground: #cbd5e1 !important;
+  --muted-foreground: #ffffff !important;
   --success: #4ade80 !important;
   --danger: #f87171 !important;
 }
 
-/* Distinctive borders in High Contrast */
 .high-contrast * {
   border-color: var(--border) !important;
   box-shadow: none !important;
 }
 
-/* Accessibility Feature Classes */
 .font-dyslexic { font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important; }
 
-/* Colorblindness Filters (Standard SVG Matrix) */
+/* Colorblindness Filters */
 .filter-protanopia { filter: url('#protanopia'); }
 .filter-deuteranopia { filter: url('#deuteranopia'); }
 .filter-tritanopia { filter: url('#tritanopia'); }
@@ -60,7 +56,6 @@ html {
 
 .reduce-motion * { transition: none !important; animation: none !important; }
 
-/* Font Size Scales */
 .text-size-normal { --font-base: 16px; }
 .text-size-large { --font-base: 20px; }
 .text-size-xlarge { --font-base: 24px; }
