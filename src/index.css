@@ -14,13 +14,13 @@
   --font-base: 16px; /* Base scaling variable */
 }
 
-/* Apply scaling to the root html for Tailwind rem support */
+/* Global scaling for Tailwind rem units */
 html {
   font-size: var(--font-base);
   transition: font-size 0.2s ease-in-out;
 }
 
-/* Dark Mode Theme */
+/* Dark Mode */
 .dark {
   --background: #0f172a;
   --foreground: #f8fafc;
@@ -30,24 +30,29 @@ html {
   --primary: #a29bfe;
 }
 
-/* Enhanced High Contrast Mode (WCAG AAA) */
+/* Modern High Contrast Mode (Midnight & Cyan) */
+/* This provides AAA contrast while looking professional */
 .high-contrast {
-  --background: #000000 !important;
+  --background: #020617 !important;
   --foreground: #ffffff !important;
-  --card: #000000 !important;
-  --border: #ffffff !important;
-  --primary: #ffff00 !important; /* High-vis yellow */
-  --muted-foreground: #ffffff !important;
+  --card: #0f172a !important;
+  --border: #38bdf8 !important; /* Bright Cyan border */
+  --primary: #38bdf8 !important;
+  --muted-foreground: #cbd5e1 !important;
+  --success: #4ade80 !important;
+  --danger: #f87171 !important;
 }
 
+/* Distinctive borders in High Contrast */
 .high-contrast * {
-  border-color: #ffffff !important;
-  border-width: 1px;
+  border-color: var(--border) !important;
+  box-shadow: none !important;
 }
 
 /* Accessibility Feature Classes */
 .font-dyslexic { font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important; }
 
+/* Colorblindness Filters (Standard SVG Matrix) */
 .filter-protanopia { filter: url('#protanopia'); }
 .filter-deuteranopia { filter: url('#deuteranopia'); }
 .filter-tritanopia { filter: url('#tritanopia'); }
@@ -64,15 +69,8 @@ body {
   font-family: 'Montserrat', sans-serif;
   color: var(--foreground);
   background-color: var(--background);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-.screen-enter {
-  animation: slideUp 0.3s ease-out both;
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+.screen-enter { animation: slideUp 0.3s ease-out both; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

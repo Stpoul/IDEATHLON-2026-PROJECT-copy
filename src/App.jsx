@@ -15,119 +15,77 @@ const TABS = [
   { id: 'impact',  label: 'Impact',   Icon: BarChart2,     Screen: ImpactScreen  },
 ];
 
-const UniversalAccessIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-    <circle cx="12" cy="4" r="2" />
-    <path d="M20 13c-2-2-5-3-8-3s-6 1-8 3" />
-    <path d="M12 10v6" />
-    <path d="M7 22l5-6 5 6" />
-  </svg>
-);
-
 export default function App() {
   const [activeTab, setActiveTab] = useState('roadmap');
   const [showAccess, setShowAccess] = useState(false);
   
+  // Mentor Feedback: Motivation States
+  const [xp, setXp] = useState(340);
+  const [streak, setStreak] = useState(5);
+
   // Accessibility States
   const [darkMode, setDarkMode] = useState(false);
   const [highContrast, setHighContrast] = useState(false);
   const [dyslexic, setDyslexic] = useState(false);
-  const [motion, setMotion] = useState(false);
   const [textSize, setTextSize] = useState('normal');
   const [cb, setCb] = useState('none');
 
   const { Screen: ActiveScreen } = TABS.find((t) => t.id === activeTab);
 
-  // Sync classes to HTML for rem scaling and theme propagation
   useEffect(() => {
     const classes = [
       darkMode ? 'dark' : '',
       highContrast ? 'high-contrast' : '',
       dyslexic ? 'font-dyslexic' : '',
-      motion ? 'reduce-motion' : '',
       cb !== 'none' ? `filter-${cb}` : '',
       `text-size-${textSize}`
     ].filter(Boolean);
-    
     document.documentElement.className = classes.join(' ');
-  }, [darkMode, highContrast, dyslexic, motion, textSize, cb]);
-
-  const resetAccess = () => {
-    setDarkMode(false);
-    setHighContrast(false);
-    setDyslexic(false);
-    setMotion(false);
-    setTextSize('normal');
-    setCb('none');
-  };
+  }, [darkMode, highContrast, dyslexic, textSize, cb]);
 
   return (
     <div className="bg-slate-200 flex items-center justify-center min-h-[100dvh]">
-      {/* Container width fixed at max-w-[448px] to keep strict mobile look during font growth */}
       <div className="relative w-full max-w-[448px] h-[100dvh] md:h-[90vh] md:max-h-[800px] mx-auto flex flex-col overflow-hidden bg-[var(--background)] shadow-2xl md:rounded-[40px] text-[var(--foreground)] transition-all">
         
-        {/* Top Control Bar */}
+        {/* Floating Controls */}
         <div className="absolute top-4 left-4 right-4 z-50 flex justify-between">
-          <button onClick={() => setDarkMode(!darkMode)} className="p-3 bg-white/90 dark:bg-slate-800 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 hover:scale-105 transition-transform">
+          <button onClick={() => setDarkMode(!darkMode)} className="p-3 bg-white/90 dark:bg-slate-800 rounded-full shadow-lg border border-slate-200 dark:border-slate-700">
             {darkMode ? <Sun size={20} className="text-amber-500" /> : <Moon size={20} className="text-slate-600" />}
           </button>
-          <button onClick={() => setShowAccess(true)} className="p-3 bg-[var(--primary)] text-white rounded-full shadow-lg hover:scale-105 transition-transform">
+          <button onClick={() => setShowAccess(true)} className="p-3 bg-[var(--primary)] text-white rounded-full shadow-lg">
             <UniversalAccessIcon />
           </button>
         </div>
 
-        {/* Accessibility Modal */}
+        {/* Accessibility Modal (Includes Reset) */}
         {showAccess && (
           <div className="absolute inset-0 bg-black/50 z-[100] flex items-end justify-center backdrop-blur-sm">
             <div className="bg-[var(--card)] w-full p-6 rounded-t-[30px] shadow-2xl max-h-[85%] overflow-y-auto">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold flex items-center gap-2 text-[var(--foreground)]">
-                  <UniversalAccessIcon /> Settings
-                </h2>
-                <button onClick={() => setShowAccess(false)} className="p-2 text-[var(--muted-foreground)]"><X /></button>
+                <h2 className="text-xl font-bold flex items-center gap-2">Settings</h2>
+                <button onClick={() => setShowAccess(false)} className="p-2"><X /></button>
               </div>
-
               <div className="grid grid-cols-2 gap-3 mb-6">
-                <button onClick={() => setHighContrast(!highContrast)} className={`p-3 rounded-xl border-2 flex items-center justify-center gap-2 font-bold text-xs transition-all ${highContrast ? 'bg-[var(--primary)] text-white border-[var(--primary)]' : 'border-[var(--border)]'}`}>
-                  <Eye size={18}/> High Contrast
-                </button>
-                <button onClick={() => setDyslexic(!dyslexic)} className={`p-3 rounded-xl border-2 flex items-center justify-center gap-2 font-bold text-xs transition-all ${dyslexic ? 'bg-[var(--primary)] text-white border-[var(--primary)]' : 'border-[var(--border)]'}`}>
-                  <Type size={18}/> Dyslexic Font
-                </button>
+                <button onClick={() => setHighContrast(!highContrast)} className={`p-4 rounded-xl border-2 font-bold text-xs ${highContrast ? 'bg-[var(--primary)] text-white' : ''}`}>High Contrast</button>
+                <button onClick={() => setDyslexic(!dyslexic)} className={`p-4 rounded-xl border-2 font-bold text-xs ${dyslexic ? 'bg-[var(--primary)] text-white' : ''}`}>Dyslexic Font</button>
               </div>
-
-              <div className="mb-6">
-                <label className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3 block">Colorblindness Type</label>
-                <select value={cb} onChange={(e) => setCb(e.target.value)} className="w-full p-3 rounded-xl bg-[var(--background)] border-2 border-[var(--border)] font-bold text-sm text-[var(--foreground)] focus:outline-none focus:border-[var(--primary)]">
-                  <option value="none">Standard Color</option>
-                  <option value="deuteranopia">Deuteranopia (Green-Weak)</option>
-                  <option value="protanopia">Protanopia (Red-Weak)</option>
-                  <option value="tritanopia">Tritanopia (Blue-Weak)</option>
-                  <option value="achromatopsia">Achromatopsia (Grayscale)</option>
-                </select>
-              </div>
-
               <div className="mb-8">
                 <h3 className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3">Font size</h3>
                 <div className="flex gap-2">
                   {['normal', 'large', 'xlarge'].map(s => (
-                    <button key={s} onClick={() => setTextSize(s)} className={`flex-1 py-3 rounded-xl border-2 font-bold capitalize transition-all ${textSize === s ? 'bg-[var(--primary)] text-white border-[var(--primary)]' : 'border-[var(--border)] text-[var(--muted-foreground)]'}`}>
-                      {s}
-                    </button>
+                    <button key={s} onClick={() => setTextSize(s)} className={`flex-1 py-3 rounded-xl border-2 font-bold capitalize ${textSize === s ? 'bg-[var(--primary)] text-white' : ''}`}>{s}</button>
                   ))}
                 </div>
               </div>
-
-              {/* Reset Button at the bottom */}
-              <button onClick={resetAccess} className="w-full py-4 rounded-xl border-2 border-red-100 text-red-500 font-bold flex items-center justify-center gap-2 hover:bg-red-50 transition-all active:scale-95">
+              <button onClick={() => { setDarkMode(false); setHighContrast(false); setDyslexic(false); setTextSize('normal'); setCb('none'); }} className="w-full py-4 border-2 border-red-100 text-red-500 font-bold rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all">
                 <RotateCcw size={18} /> Reset to Defaults
               </button>
             </div>
           </div>
         )}
 
-        <main className="flex-1 overflow-y-auto flex flex-col pt-16">
-          <ActiveScreen onNavigate={setActiveTab} />
+        <main className="flex-1 overflow-y-auto pt-16">
+          <ActiveScreen onNavigate={setActiveTab} globalXp={xp} globalStreak={streak} />
         </main>
 
         <nav className="shrink-0 border-t border-[var(--border)] bg-[var(--card)]/80 backdrop-blur-md">
@@ -142,17 +100,11 @@ export default function App() {
             ))}
           </ul>
         </nav>
-
-        {/* Global Colorblindness Filters */}
-        <svg style={{ display: 'none' }}>
-          <defs>
-            <filter id="protanopia"><feColorMatrix type="matrix" values="0.567, 0.433, 0, 0, 0, 0.558, 0.442, 0, 0, 0, 0, 0.242, 0.758, 0, 0, 0, 0, 0, 1, 0" /></filter>
-            <filter id="deuteranopia"><feColorMatrix type="matrix" values="0.625, 0.375, 0, 0, 0, 0.7, 0.3, 0, 0, 0, 0, 0.3, 0.7, 0, 0, 0, 0, 0, 1, 0" /></filter>
-            <filter id="tritanopia"><feColorMatrix type="matrix" values="0.95, 0.05, 0, 0, 0, 0, 0.433, 0.567, 0, 0, 0, 0.475, 0.525, 0, 0, 0, 0, 0, 1, 0" /></filter>
-            <filter id="achromatopsia"><feColorMatrix type="matrix" values="0.299, 0.587, 0.114, 0, 0, 0.299, 0.587, 0.114, 0, 0, 0.299, 0.587, 0.114, 0, 0, 0, 0, 0, 1, 0" /></filter>
-          </defs>
-        </svg>
       </div>
     </div>
   );
 }
+
+const UniversalAccessIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6"><circle cx="12" cy="4" r="2" /><path d="M20 13c-2-2-5-3-8-3s-6 1-8 3M12 10v6M7 22l5-6 5 6" /></svg>
+);
