@@ -7,68 +7,53 @@
   --background: #f9f9f9;
   --foreground: #333333;
   --card: #ffffff;
-  --border: #d4d4d4;
-  --muted-foreground: #6e6e6e;
+  --border: #e2e8f0;
+  --muted-foreground: #64748b;
   --success: #10B981;
   --danger: #ef4444;
-  --font-size-base: 16px;
+  --font-base: 16px;
 }
 
-/* Dark Mode Theme */
 .dark {
+  --background: #0f172a;
+  --foreground: #f8fafc;
+  --card: #1e293b;
+  --border: #334155;
+  --muted-foreground: #94a3b8;
   --primary: #a29bfe;
-  --background: #111827;
-  --foreground: #f9fafb;
-  --card: #1f2937;
-  --border: #374151;
-  --muted-foreground: #9ca3af;
 }
 
-/* High Contrast Mode */
 .high-contrast {
-  --primary: #ffff00;
-  --background: #000000;
-  --foreground: #ffffff;
-  --card: #000000;
-  --border: #ffffff;
-  --muted-foreground: #ffffff;
+  --background: #000000 !important;
+  --foreground: #ffffff !important;
+  --card: #000000 !important;
+  --border: #ffffff !important;
+  --primary: #ffff00 !important;
+  --muted-foreground: #ffffff !important;
 }
 
-/* Dyslexia Friendly Font */
-.font-dyslexic {
-  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif !important;
-  letter-spacing: 0.05em !important;
-  word-spacing: 0.1em !important;
-}
+.high-contrast * { border-color: #ffffff !important; border-width: 1px; }
 
-/* Reduce Motion */
-.reduce-motion * {
-  animation: none !important;
-  transition: none !important;
-}
+.font-dyslexic { font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important; }
 
-/* Colorblind Enhancement */
-.colorblind-mode {
-  filter: saturate(1.5) contrast(1.2);
-}
+.filter-protanopia { filter: url('#protanopia'); }
+.filter-deuteranopia { filter: url('#deuteranopia'); }
+.filter-tritanopia { filter: url('#tritanopia'); }
+.filter-achromatopsia { filter: url('#achromatopsia'); }
+
+.reduce-motion * { transition: none !important; animation: none !important; }
+
+.text-size-normal { --font-base: 16px; }
+.text-size-large { --font-base: 20px; }
+.text-size-xlarge { --font-base: 24px; }
 
 body {
   font-family: 'Montserrat', sans-serif;
-  font-size: var(--font-size-base);
+  font-size: var(--font-base);
   color: var(--foreground);
   background-color: var(--background);
   transition: background-color 0.3s, color 0.3s;
 }
 
-/* Global scaling for text sizes */
-.text-size-large { --font-size-base: 20px; }
-.text-size-xlarge { --font-size-base: 24px; }
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.screen-enter {
-  animation: slideUp 0.3s ease-out both;
-}
+.screen-enter { animation: slideUp 0.3s ease-out both; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

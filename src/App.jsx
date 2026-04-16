@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Map, Layers, Users, MessageCircle, BarChart2, Accessibility, X, Moon, Sun, Type, Eye, Move } from 'lucide-react';
+import { useState } from 'react';
+import { Map, Layers, Users, MessageCircle, BarChart2, Moon, Sun, X, Type, Eye, Palette, Activity } from 'lucide-react';
 
 import RoadmapScreen from './screens/RoadmapScreen';
 import SwipeScreen from './screens/SwipeScreen';
@@ -15,98 +15,89 @@ const TABS = [
   { id: 'impact',  label: 'Impact',   Icon: BarChart2,     Screen: ImpactScreen  },
 ];
 
+const UniversalAccessIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6"><circle cx="12" cy="4" r="2" /><path d="M20 13c-2-2-5-3-8-3s-6 1-8 3M12 10v6M7 22l5-6 5 6" /></svg>
+);
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('roadmap');
   const [showAccess, setShowAccess] = useState(false);
-  
-  // Accessibility State
   const [darkMode, setDarkMode] = useState(false);
-  const [dyslexic, setDyslexic] = useState(false);
   const [highContrast, setHighContrast] = useState(false);
-  const [textSize, setTextSize] = useState('normal'); // normal, large, xlarge
-  const [reduceMotion, setReduceMotion] = useState(false);
+  const [dyslexic, setDyslexic] = useState(false);
+  const [motion, setMotion] = useState(false);
+  const [textSize, setTextSize] = useState('normal');
+  const [cb, setCb] = useState('none');
 
   const { Screen: ActiveScreen } = TABS.find((t) => t.id === activeTab);
 
-  const appClasses = `
-    ${darkMode ? 'dark' : ''} 
-    ${dyslexic ? 'font-dyslexic' : ''} 
-    ${highContrast ? 'high-contrast' : ''} 
-    ${reduceMotion ? 'reduce-motion' : ''} 
-    text-size-${textSize}
-  `;
-
   return (
-    <div className={`${appClasses} bg-slate-200 flex items-center justify-center min-h-[100dvh]`}>
+    <div className={`bg-slate-200 flex items-center justify-center min-h-[100dvh] ${darkMode ? 'dark' : ''} ${highContrast ? 'high-contrast' : ''} ${dyslexic ? 'font-dyslexic' : ''} ${motion ? 'reduce-motion' : ''} ${cb !== 'none' ? `filter-${cb}` : ''} text-size-${textSize}`}>
       <div className="relative w-full max-w-md h-[100dvh] md:h-[90vh] md:max-h-[800px] mx-auto flex flex-col overflow-hidden bg-[var(--background)] shadow-2xl md:rounded-[40px] text-[var(--foreground)]">
         
-        {/* Floating Access Button */}
-        <button 
-          onClick={() => setShowAccess(true)}
-          className="absolute top-4 right-4 z-50 p-3 bg-[var(--primary)] text-white rounded-full shadow-lg"
-        >
-          <Accessibility size={24} />
-        </button>
+        {/* Top Controls */}
+        <div className="absolute top-4 left-4 right-4 z-50 flex justify-between">
+          <button onClick={() => setDarkMode(!darkMode)} className="p-3 bg-white/90 dark:bg-slate-800 rounded-full shadow-lg border border-slate-200 dark:border-slate-700">
+            {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+          <button onClick={() => setShowAccess(true)} className="p-3 bg-[var(--primary)] text-white rounded-full shadow-lg">
+            <UniversalAccessIcon />
+          </button>
+        </div>
 
-        {/* Access Menu Backdrop */}
+        {/* Accessibility Modal */}
         {showAccess && (
-          <div className="absolute inset-0 bg-black/40 z-[60] flex items-end justify-center">
-            <div className="bg-[var(--card)] w-full p-6 rounded-t-3xl shadow-2xl animate-in slide-in-from-bottom">
+          <div className="absolute inset-0 bg-black/50 z-[100] flex items-end justify-center backdrop-blur-sm">
+            <div className="bg-[var(--card)] w-full p-6 rounded-t-[30px] shadow-2xl max-h-[85%] overflow-y-auto">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold">Accessibility</h2>
                 <button onClick={() => setShowAccess(false)}><X /></button>
               </div>
-              
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <AccessToggle icon={<Moon size={20}/>} label="Dark Mode" active={darkMode} onClick={() => setDarkMode(!darkMode)} />
-                <AccessToggle icon={<Type size={20}/>} label="Dyslexia Font" active={dyslexic} onClick={() => setDyslexic(!dyslexic)} />
-                <AccessToggle icon={<Eye size={20}/>} label="High Contrast" active={highContrast} onClick={() => setHighContrast(!highContrast)} />
-                <AccessToggle icon={<Move size={20}/>} label="Reduce Motion" active={reduceMotion} onClick={() => setReduceMotion(!reduceMotion)} />
+              <div className="grid grid-cols-2 gap-3 mb-6">
+                <button onClick={() => setHighContrast(!highContrast)} className={`p-3 rounded-xl border-2 flex items-center gap-2 ${highContrast ? 'bg-[var(--primary)] text-white' : ''}`}><Eye size={18}/> High Contrast</button>
+                <button onClick={() => setDyslexic(!dyslexic)} className={`p-3 rounded-xl border-2 flex items-center gap-2 ${dyslexic ? 'bg-[var(--primary)] text-white' : ''}`}><Type size={18}/> Dyslexic</button>
               </div>
-
+              <select value={cb} onChange={(e) => setCb(e.target.value)} className="w-full p-3 mb-6 rounded-xl bg-[var(--background)] border border-[var(--border)]">
+                <option value="none">Standard Color</option>
+                <option value="deuteranopia">Deuteranopia</option>
+                <option value="protanopia">Protanopia</option>
+                <option value="tritanopia">Tritanopia</option>
+                <option value="achromatopsia">Achromatopsia</option>
+              </select>
               <div className="flex gap-2">
-                 {['normal', 'large', 'xlarge'].map(size => (
-                   <button 
-                    key={size}
-                    onClick={() => setTextSize(size)}
-                    className={`flex-1 py-2 rounded-xl border font-bold capitalize ${textSize === size ? 'bg-[var(--primary)] text-white' : 'bg-[var(--background)]'}`}
-                   >
-                     {size}
-                   </button>
-                 ))}
+                {['normal', 'large', 'xlarge'].map(s => <button key={s} onClick={() => setTextSize(s)} className={`flex-1 py-3 rounded-xl border-2 capitalize ${textSize === s ? 'bg-[var(--primary)] text-white' : ''}`}>{s}</button>)}
               </div>
             </div>
           </div>
         )}
 
-        <main className="flex-1 overflow-y-auto flex flex-col">
+        <main className="flex-1 overflow-y-auto flex flex-col pt-16">
           <ActiveScreen onNavigate={setActiveTab} />
         </main>
 
-        <nav className="shrink-0 border-t border-[var(--border)] bg-[var(--card)]">
+        <nav className="shrink-0 border-t border-[var(--border)] bg-[var(--card)]/80 backdrop-blur-md">
           <ul className="flex">
-            {TABS.map(({ id, label, Icon }) => {
-              const active = activeTab === id;
-              return (
-                <li key={id} className="flex-1">
-                  <button onClick={() => setActiveTab(id)} className="w-full flex flex-col items-center gap-1 py-3 transition-all duration-150 active:scale-95">
-                    <Icon size={22} className={active ? 'text-[var(--primary)]' : 'text-gray-400'} />
-                    <span className={`text-[10px] font-semibold ${active ? 'text-[var(--primary)]' : 'text-gray-400'}`}>{label}</span>
-                  </button>
-                </li>
-              );
-            })}
+            {TABS.map(({ id, label, Icon }) => (
+              <li key={id} className="flex-1">
+                <button onClick={() => setActiveTab(id)} className="w-full flex flex-col items-center gap-1 py-3">
+                  <Icon size={22} className={activeTab === id ? 'text-[var(--primary)]' : 'text-slate-400'} />
+                  <span className={`text-[10px] font-semibold ${activeTab === id ? 'text-[var(--primary)]' : 'text-slate-400'}`}>{label}</span>
+                </button>
+              </li>
+            ))}
           </ul>
         </nav>
+
+        {/* Filters */}
+        <svg style={{ display: 'none' }}>
+          <defs>
+            <filter id="protanopia"><feColorMatrix type="matrix" values="0.567, 0.433, 0, 0, 0, 0.558, 0.442, 0, 0, 0, 0, 0.242, 0.758, 0, 0, 0, 0, 0, 1, 0" /></filter>
+            <filter id="deuteranopia"><feColorMatrix type="matrix" values="0.625, 0.375, 0, 0, 0, 0.7, 0.3, 0, 0, 0, 0, 0.3, 0.7, 0, 0, 0, 0, 0, 1, 0" /></filter>
+            <filter id="tritanopia"><feColorMatrix type="matrix" values="0.95, 0.05, 0, 0, 0, 0, 0.433, 0.567, 0, 0, 0, 0.475, 0.525, 0, 0, 0, 0, 0, 1, 0" /></filter>
+            <filter id="achromatopsia"><feColorMatrix type="matrix" values="0.299, 0.587, 0.114, 0, 0, 0.299, 0.587, 0.114, 0, 0, 0.299, 0.587, 0.114, 0, 0, 0, 0, 0, 1, 0" /></filter>
+          </defs>
+        </svg>
       </div>
     </div>
-  );
-}
-
-function AccessToggle({ icon, label, active, onClick }) {
-  return (
-    <button onClick={onClick} className={`flex items-center gap-3 p-3 rounded-xl border ${active ? 'bg-[var(--primary)] text-white' : 'bg-[var(--background)]'}`}>
-      {icon} <span className="text-xs font-bold">{label}</span>
-    </button>
   );
 }
