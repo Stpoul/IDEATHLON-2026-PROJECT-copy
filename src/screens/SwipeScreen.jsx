@@ -2,19 +2,34 @@ import { useState } from 'react';
 import { Flame, Zap, X, Heart } from 'lucide-react';
 
 const SCENARIOS = [
+  // Technical & Vocational
   { e:'🔧', t:'Dismantle a radio to see how it works', c:'Technical' },
+  { e:'🎨', t:'Design a professional logo for a local business', c:'Creative' },
+  { e:'🔬', t:'Perform a chemistry experiment at home', c:'Science' },
+  { e:'🏗️', t:'Create a 3D floor plan for a modern house', c:'Technical' },
+  { e:'🧬', t:'Study how DNA determines biological traits', c:'Science' },
+  { e:'🌲', t:'Work outdoors in a national park or forest', c:'Outdoors' },
+  { e:'🏥', t:'Volunteer at a hospital to assist patients', c:'Social' },
+  { e:'⚖️', t:'Debate ethics in a modern mock courtroom', c:'Social' },
+  { e:'📊', t:'Analyze complex data to solve a regional problem', c:'Logic' },
+  { e:'✍️', t:'Write a short story about a sci-fi adventure', c:'Creative' },
+
+  // Mentor Feedback: Teaching Style & Pedagogical Feedback
+  // These help teachers adapt their teaching methods
   { e:'📚', t:'"I wish my teachers used more hands-on experiments in class."', c:'Teaching Style' },
-  { e:'✍️', t:'Write a story about someone else\'s life', c:'Creative' },
-  { e:'🔬', t:'Perform a science experiment at home', c:'Science' },
   { e:'💡', t:'"I find it easier to learn through videos than lectures."', c:'Teaching Style' },
-  { e:'🎨', t:'Design a logo for a local business', c:'Creative' },
-  { e:'🧬', t:'Study how DNA determines our traits', c:'Science' },
-  { e:'⚖️', t:'Debate on ethics in the modern courtroom', c:'Social' },
   { e:'🖥️', t:'"I learn better when we work in groups rather than alone."', c:'Teaching Style' },
+  { e:'📝', t:'"I prefer digital assignments over paper-based ones."', c:'Teaching Style' },
+  { e:'📱', t:'"I would like more interactive apps like this to help me learn."', c:'Teaching Style' },
+  { e:'🧪', t:'"I prefer learning by doing rather than reading from a book."', c:'Teaching Style' },
 ];
 
 export default function SwipeScreen({ onNavigate, globalStreak }) {
   const [idx, setIdx] = useState(0);
+
+  const nextQuestion = () => {
+    setIdx((prev) => (prev + 1) % SCENARIOS.length);
+  };
 
   return (
     <div className="flex-1 flex flex-col bg-[var(--background)] screen-enter p-6">
@@ -37,16 +52,26 @@ export default function SwipeScreen({ onNavigate, globalStreak }) {
       <div className="flex-1 flex flex-col items-center justify-center">
         <div className="w-full bg-[var(--card)] rounded-3xl p-8 shadow-xl border border-[var(--border)] text-center transition-colors">
           <div className="text-6xl mb-4">{SCENARIOS[idx].e}</div>
-          <span className="text-xs font-bold uppercase tracking-widest text-[var(--primary)] mb-2 block">{SCENARIOS[idx].c}</span>
-          <p className="text-[var(--foreground)] text-xl font-bold leading-snug">{SCENARIOS[idx].t}</p>
+          <span className="text-xs font-bold uppercase tracking-widest text-[var(--primary)] mb-2 block">
+            {SCENARIOS[idx].c}
+          </span>
+          <p className="text-[var(--foreground)] text-xl font-bold leading-snug">
+            {SCENARIOS[idx].t}
+          </p>
         </div>
       </div>
 
       <div className="flex justify-center gap-6 py-8">
-        <button onClick={() => setIdx((idx + 1) % SCENARIOS.length)} className="w-16 h-16 rounded-full bg-[var(--card)] border border-[var(--border)] text-[var(--danger)] flex items-center justify-center active:scale-95 transition-all shadow-md">
+        <button 
+          onClick={nextQuestion} 
+          className="w-16 h-16 rounded-full bg-[var(--card)] border border-[var(--border)] text-[var(--danger)] flex items-center justify-center active:scale-95 transition-all shadow-md"
+        >
           <X size={28} />
         </button>
-        <button onClick={() => onNavigate('bridge')} className="w-20 h-20 rounded-full bg-[var(--primary)] text-white flex items-center justify-center shadow-lg active:scale-95 transition-all">
+        <button 
+          onClick={() => onNavigate('bridge')} 
+          className="w-20 h-20 rounded-full bg-[var(--primary)] text-white flex items-center justify-center shadow-lg active:scale-95 transition-all"
+        >
           <Heart size={36} fill="white" strokeWidth={0} />
         </button>
       </div>
