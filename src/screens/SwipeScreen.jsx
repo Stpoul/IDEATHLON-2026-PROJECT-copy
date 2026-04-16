@@ -1,147 +1,109 @@
-import { Flame, Zap, X, Heart, Radio, PenLine } from 'lucide-react';
+import { useState } from 'react';
+import { Flame, Zap, X, Heart, SkipForward } from 'lucide-react';
 
-function StatBadge({ icon: Icon, label, gradient, shadow }) {
+const SCENARIOS = [
+  { e:'🔧', t:'Rozebrat rádio, abys viděl jak funguje', c:'Technické' },
+  { e:'✍️', t:'Napsat příběh o životě někoho jiného', c:'Kreativní' },
+  { e:'🔬', t:'Udělat vědecký pokus doma', c:'Věda' },
+  { e:'🎭', t:'Zorganizovat školní akci pro 50 lidí', c:'Sociální' },
+  { e:'💻', t:'Vytvořit malou appku pro spolužáky', c:'Tech' },
+];
+
+const CAT_COLOR = {
+  Technické: { bg: '#ede9fe', text: '#6d28d9' },
+  Kreativní: { bg: '#fff7ed', text: '#c2410c' },
+  Věda:      { bg: '#f0fdf4', text: '#15803d' },
+  Sociální:  { bg: '#fdf4ff', text: '#a21caf' },
+  Tech:      { bg: '#e0e7ff', text: '#3730a3' },
+};
+
+export default function SwipeScreen({ onNavigate }) {
+  const [idx, setIdx] = useState(0);
+  const [dir, setDir] = useState(null);
+  const [done, setDone] = useState(false);
+
+  const advance = (direction) => {
+    setDir(direction);
+    setTimeout(() => {
+      setDir(null);
+      if (idx < SCENARIOS.length - 1) { setIdx(i => i + 1); }
+      else { setDone(true); }
+    }, 300);
+  };
+
+  if (done) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center gap-6 bg-[var(--background)] px-8 text-center screen-enter">
+        <div className="w-24 h-24 text-5xl" style={{ animation: 'bounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both' }}>🎉</div>
+        <div>
+          <h1 className="text-3xl font-[800] text-[var(--foreground)]">Hotovo!</h1>
+          <p className="text-[var(--muted-foreground)] text-base mt-2 leading-relaxed">Odemkl jsi svůj alumni match na základě tvých odpovědí.</p>
+        </div>
+        <button onClick={() => onNavigate('bridge')} className="w-full bg-[var(--primary)] text-white font-bold text-lg py-4 rounded-2xl shadow-lg shadow-purple-200 active:scale-95 transition-all duration-150">
+          Zobrazit můj match →
+        </button>
+      </div>
+    );
+  }
+
+  const card = SCENARIOS[idx];
+  const cat  = CAT_COLOR[card.c];
+  const cardStyle = {
+    transition: 'transform 0.28s cubic-bezier(0.4,0,1,1), opacity 0.28s ease',
+    transform: dir === 'left' ? 'translateX(-110%) rotate(-12deg)' : dir === 'right' ? 'translateX(110%) rotate(12deg)' : 'translateX(0)',
+    opacity: dir ? 0 : 1,
+  };
+
   return (
-    <div className={`flex items-center gap-1.5 ${gradient} text-white text-sm font-semibold px-4 py-2 rounded-full shadow-lg ${shadow}`}>
-      <Icon size={14} fill="white" strokeWidth={0} aria-hidden="true" />
-      <span>{label}</span>
-    </div>
-  );
-}
-
-export default function SwipeScreen() {
-  return (
-    <div className="flex-1 min-h-0 flex flex-col bg-gradient-to-b from-slate-50 via-white to-violet-50/40">
-
-      {/* ── Status Bar ── */}
-      <div className="flex items-center justify-between px-6 pt-7 pb-4">
-
-        <StatBadge
-          icon={Zap}
-          label="Level 8"
-          gradient="bg-gradient-to-r from-violet-500 to-purple-600"
-          shadow="shadow-violet-200/70"
-        />
-        <StatBadge
-          icon={Flame}
-          label="5 Day Streak"
-          gradient="bg-gradient-to-r from-amber-400 to-orange-500"
-          shadow="shadow-orange-200/70"
-        />
-
+    <div className="flex-1 flex flex-col bg-[var(--background)] screen-enter">
+      <div className="px-6 pt-14 pb-4">
+        <p className="text-[var(--muted-foreground)] text-sm font-semibold">Otázka {idx + 1} z {SCENARIOS.length}</p>
+        <h1 className="text-slate-900 text-3xl font-[800] mt-1">Discover</h1>
       </div>
 
-      {/* ── XP Progress Track ── */}
-      <div className="mx-6 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-        <div
-          className="h-full w-[58%] bg-gradient-to-r from-violet-500 to-purple-400 rounded-full"
-          role="progressbar"
-          aria-valuenow={58}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-label="XP progress"
-        />
-      </div>
-
-      {/* ── Card Section ── */}
-      <div className="flex-1 flex flex-col items-center justify-center px-5 py-5">
-
-        <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-[0.12em] mb-4 select-none">
-          Question 3 of 5
-        </p>
-
-        {/* Main card */}
-        <div className="w-full bg-white rounded-[2rem] border border-slate-100 shadow-[0_28px_72px_-12px_rgba(109,40,217,0.18),0_8px_24px_-8px_rgba(0,0,0,0.07)]">
-
-          {/* Card header */}
-          <div className="text-center pt-7 pb-5 px-6">
-            <p className="text-[11px] font-bold text-violet-500 uppercase tracking-[0.14em] mb-2 select-none">
-              What sounds more fun?
-            </p>
-            <div className="w-10 h-[2px] bg-gradient-to-r from-violet-400 to-purple-400 mx-auto rounded-full" />
-          </div>
-
-          {/* Two option tiles */}
-          <div className="grid grid-cols-2 gap-3 px-5 pb-7">
-
-            {/* Option A — Taking apart a radio */}
-            <button
-              aria-label="Taking apart a radio"
-              className="group flex flex-col items-center gap-3 bg-gradient-to-br from-blue-50 to-violet-50 rounded-2xl p-5 border-2 border-blue-100 active:scale-[0.95] transition-transform duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
-            >
-              <div className="w-14 h-14 bg-gradient-to-br from-blue-100 to-violet-200 rounded-xl flex items-center justify-center shadow-sm">
-                <Radio
-                  size={26}
-                  strokeWidth={1.8}
-                  className="text-violet-700"
-                  aria-hidden="true"
-                />
-              </div>
-              <span className="text-[13px] font-semibold text-slate-700 text-center leading-snug">
-                Taking apart a radio
-              </span>
-            </button>
-
-            {/* Option B — Writing a story */}
-            <button
-              aria-label="Writing a story"
-              className="group flex flex-col items-center gap-3 bg-gradient-to-br from-rose-50 to-amber-50 rounded-2xl p-5 border-2 border-rose-100 active:scale-[0.95] transition-transform duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
-            >
-              <div className="w-14 h-14 bg-gradient-to-br from-rose-100 to-amber-200 rounded-xl flex items-center justify-center shadow-sm">
-                <PenLine
-                  size={26}
-                  strokeWidth={1.8}
-                  className="text-rose-600"
-                  aria-hidden="true"
-                />
-              </div>
-              <span className="text-[13px] font-semibold text-slate-700 text-center leading-snug">
-                Writing a story
-              </span>
-            </button>
-
-          </div>
-
-          {/* Subtle divider + "or" */}
-          <div className="flex items-center gap-3 mx-6 mb-6">
-            <div className="flex-1 h-px bg-slate-100" />
-            <span className="text-[11px] font-medium text-slate-300 uppercase tracking-wider select-none">
-              or
-            </span>
-            <div className="flex-1 h-px bg-slate-100" />
-          </div>
-
-          {/* Skip this round */}
-          <div className="text-center pb-6">
-            <button className="text-[12px] text-slate-400 font-medium underline underline-offset-2 active:text-slate-600 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 rounded">
-              Skip this one
-            </button>
-          </div>
-
+      <div className="flex gap-3 px-6 mb-5">
+        <div className="flex-1 flex items-center gap-2.5 bg-purple-100 rounded-2xl p-3">
+          <Zap size={18} className="text-[var(--primary)]" />
+          <span className="text-[var(--primary)] text-sm font-bold">Level 8</span>
+        </div>
+        <div className="flex-1 flex items-center gap-2.5 bg-orange-100 rounded-2xl p-3">
+          <Flame size={18} className="text-orange-500" />
+          <span className="text-orange-600 text-sm font-bold">5 Day Streak</span>
         </div>
       </div>
 
-      {/* ── Floating Action Buttons ── */}
-      <div className="flex items-center justify-center gap-14 pb-7" role="group" aria-label="Answer controls">
-
-        {/* Discard — Red X */}
-        <button
-          aria-label="Discard — not interested"
-          className="w-[70px] h-[70px] rounded-full bg-gradient-to-br from-red-400 to-rose-500 flex items-center justify-center shadow-xl shadow-rose-300/60 active:scale-[0.88] transition-transform duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2"
-        >
-          <X size={30} strokeWidth={2.5} className="text-white" aria-hidden="true" />
-        </button>
-
-        {/* Like — Green Heart */}
-        <button
-          aria-label="Like — sounds interesting"
-          className="w-[70px] h-[70px] rounded-full bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center shadow-xl shadow-emerald-300/60 active:scale-[0.88] transition-transform duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
-        >
-          <Heart size={28} strokeWidth={2} fill="white" className="text-white" aria-hidden="true" />
-        </button>
-
+      <div className="flex items-center justify-center gap-2 mb-6">
+        {SCENARIOS.map((_, i) => (
+          <div key={i} style={{
+            height: 8, borderRadius: 4,
+            width: i === idx ? 24 : 8,
+            background: i < idx ? 'var(--success)' : i === idx ? 'var(--primary)' : '#e2e8f0',
+            transition: 'all 0.3s ease',
+          }} />
+        ))}
       </div>
 
+      <div className="flex-1 flex flex-col items-center justify-center px-6">
+        <div style={cardStyle} className="w-full bg-[var(--card)] rounded-[28px] border border-[var(--border)] shadow-2xl shadow-gray-500/10">
+          <div className="flex flex-col items-center gap-4 px-7 py-12 text-center">
+            <div className="w-24 h-24 rounded-3xl flex items-center justify-center text-5xl" style={{ background: cat.bg }}>{card.e}</div>
+            <span className="text-sm font-bold uppercase tracking-widest px-3 py-1.5 rounded-full" style={{ background: cat.bg, color: cat.text }}>{card.c}</span>
+            <p className="text-[var(--foreground)] text-xl font-bold leading-snug pt-2">{card.t}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-center gap-5 py-8">
+        <button onClick={() => advance('left')} className="w-20 h-20 rounded-full bg-white border-2 border-[var(--border)] flex items-center justify-center active:scale-95 transition-all duration-150">
+          <X size={30} className="text-[var(--danger)]" strokeWidth={3} />
+        </button>
+        <button onClick={() => advance('right')} className="w-24 h-24 rounded-full bg-[var(--primary)] flex items-center justify-center shadow-xl shadow-purple-300 active:scale-95 transition-all duration-150">
+          <Heart size={36} fill="white" strokeWidth={0} />
+        </button>
+        <button onClick={() => advance('left')} className="w-20 h-20 rounded-full bg-gray-100 border-2 border-gray-200 flex items-center justify-center active:scale-95 transition-all duration-150">
+          <SkipForward size={24} className="text-gray-400" />
+        </button>
+      </div>
     </div>
   );
 }

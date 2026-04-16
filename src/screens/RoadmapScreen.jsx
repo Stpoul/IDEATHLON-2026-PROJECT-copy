@@ -1,249 +1,129 @@
-import { Sparkles, Zap, Lock, CheckCircle2, Star, Trophy } from 'lucide-react';
+import { Sparkles, Zap, Lock, CheckCircle2, Star, Trophy, ChevronRight } from 'lucide-react';
 
-// SVG canvas dimensions and node centres — pure constants, lifted to module scope
-const PATH_W = 340;
-const PATH_H = 480;
-const N1 = { x: 100, y: 90  };
-const N2 = { x: 240, y: 250 };
-const N3 = { x: 100, y: 400 };
+const ACHIEVEMENTS = [
+  { i: '⚡', l: 'First Swipe',     d: 'Completed your first question',  earned: true  },
+  { i: '🔥', l: '3-Day Streak',    d: 'Came back 3 days in a row',      earned: true  },
+  { i: '🔍', l: 'Curiosity Badge', d: 'Completed Curiosity module',     earned: true  },
+  { i: '🤝', l: 'Alumni Bridge',   d: 'Connected with an alumni',       earned: false },
+  { i: '🏆', l: 'Completionist',   d: 'Finished all 5 swipes',          earned: false },
+];
 
-// ─── Node circle with state-specific visuals ────────────────────────────────
-function NodeBadge({ status, Icon }) {
-  if (status === 'completed') {
-    return (
-      <div className="relative">
-        <div className="w-[72px] h-[72px] rounded-full bg-gradient-to-br from-emerald-400 to-green-500 shadow-lg shadow-emerald-200/80 flex items-center justify-center">
-          <Icon size={30} strokeWidth={2} className="text-white" aria-hidden="true" />
-        </div>
-        {/* Completion tick badge */}
-        <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-sm">
-          <CheckCircle2 size={18} className="text-emerald-500" aria-hidden="true" />
-        </div>
-      </div>
-    );
-  }
+const NODES = [
+  { key: 'curiosity',  label: 'Curiosity',   sub: 'Completed · 5/5',     xp: '+120 XP', status: 'completed', Icon: Sparkles },
+  { key: 'skills',     label: 'Core Skills', sub: 'In progress · 3/5',   xp: '+150 XP', status: 'active',    Icon: Zap      },
+  { key: 'logistics',  label: 'Logistics',   sub: 'Locked',               xp: '+200 XP', status: 'locked',    Icon: Lock     },
+];
 
-  if (status === 'active') {
-    return (
-      <div className="relative">
-        {/* Outer glow — respects prefers-reduced-motion */}
-        <div className="absolute w-24 h-24 rounded-full bg-blue-400/20 motion-safe:animate-pulse blur-md" />
-        {/* Ring halo */}
-        <div className="absolute w-[84px] h-[84px] rounded-full ring-4 ring-blue-300/60" />
-        <div className="relative w-[72px] h-[72px] rounded-full bg-gradient-to-br from-blue-400 to-cyan-500 shadow-xl shadow-blue-300/70 flex items-center justify-center">
-          <Icon size={30} strokeWidth={2} className="text-white" aria-hidden="true" />
-        </div>
-      </div>
-    );
-  }
+const STATUS_COLOR = {
+  completed: { dot: '#10B981', bar: '#10B981' },
+  active:    { dot: '#2563EB', bar: '#2563EB' },
+  locked:    { dot: '#CBD5E1', bar: '#CBD5E1' },
+};
 
-  // locked
-  return (
-    <div className="w-[72px] h-[72px] rounded-full bg-slate-100 border-2 border-dashed border-slate-200 flex items-center justify-center">
-      <Icon size={26} strokeWidth={1.5} className="text-slate-300" aria-hidden="true" />
-    </div>
-  );
-}
-
-// ─── Info card beside each node ─────────────────────────────────────────────
-function NodeCard({ title, subtitle, xp, status }) {
-  const pill = {
-    completed: 'bg-emerald-50 border-emerald-200 text-emerald-700',
-    active:    'bg-blue-50   border-blue-200   text-blue-700',
-    locked:    'bg-slate-50  border-slate-200  text-slate-400',
-  }[status];
-
-  const isLocked = status === 'locked';
+export default function RoadmapScreen({ onNavigate }) {
+  const xp = 340; const xpMax = 600;
+  const earned = ACHIEVEMENTS.filter(a => a.earned).length;
 
   return (
-    <div
-      className={[
-        'bg-white rounded-2xl border border-slate-100 p-3 shadow-sm w-[128px]',
-        isLocked ? 'opacity-50' : '',
-      ].join(' ')}
-    >
-      <p className={`text-[13px] font-bold leading-tight ${isLocked ? 'text-slate-400' : 'text-slate-800'}`}>
-        {title}
-      </p>
-      <p className={`text-[11px] mt-0.5 ${isLocked ? 'text-slate-300' : 'text-slate-500'}`}>
-        {subtitle}
-      </p>
-      <span className={`inline-block mt-2 text-[10px] font-semibold px-2 py-0.5 rounded-full border ${pill}`}>
-        {xp}
-      </span>
-    </div>
-  );
-}
+    <div className="flex-1 flex flex-col bg-white">
 
-// ─── RoadmapScreen ───────────────────────────────────────────────────────────
-export default function RoadmapScreen() {
-  const xpCurrent = 340;
-  const xpTotal   = 600;
-  const xpPct     = Math.round((xpCurrent / xpTotal) * 100);
-
-  return (
-    <div className="flex-1 min-h-0 flex flex-col bg-gradient-to-b from-amber-50 to-white">
-
-      {/* ── Header ── */}
-      <div className="relative bg-gradient-to-br from-amber-400 via-orange-400 to-rose-400 px-6 pt-8 pb-8 rounded-b-[2.5rem] overflow-hidden shrink-0">
-        {/* Decorative circles */}
-        <div className="absolute -top-10 -right-10 w-44 h-44 bg-white/10 rounded-full" aria-hidden="true" />
-        <div className="absolute top-4 right-12 w-20 h-20 bg-white/10 rounded-full" aria-hidden="true" />
-
-        {/* Greeting row */}
-        <div className="relative flex items-center gap-4 mb-5">
-          <div className="w-12 h-12 rounded-2xl bg-white/25 flex items-center justify-center shadow-inner shrink-0">
-            <span className="text-white font-extrabold text-xl select-none">J</span>
-          </div>
+      {/* Header */}
+      <div className="px-5 pt-12 pb-5 bg-white">
+        <div className="flex items-center justify-between mb-1">
           <div>
-            <p className="text-white/70 text-[11px] font-semibold tracking-widest uppercase">
-              Welcome back
-            </p>
-            <h1 className="text-white text-xl font-extrabold leading-tight">
-              Jan!
-            </h1>
+            <p className="text-slate-400 text-xs font-medium">Welcome back 👋</p>
+            <h1 className="text-slate-900 text-2xl font-extrabold mt-0.5">Jan's Journey</h1>
           </div>
-          {/* XP badge */}
-          <div className="ml-auto flex items-center gap-1.5 bg-white/20 px-3 py-1.5 rounded-full">
-            <Star size={13} fill="white" strokeWidth={0} className="text-white" aria-hidden="true" />
-            <span className="text-white text-[13px] font-bold tabular-nums">340 XP</span>
+          <div className="w-11 h-11 rounded-2xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-200">
+            <span className="text-white font-extrabold text-lg">J</span>
           </div>
-        </div>
-
-        {/* XP progress bar */}
-        <div className="flex items-center justify-between mb-1.5">
-          <span className="text-white/80 text-[11px] font-semibold">Progress to Level 9</span>
-          <span className="text-white/80 text-[11px] font-semibold tabular-nums">
-            {xpCurrent} / {xpTotal}
-          </span>
-        </div>
-        <div className="h-2.5 bg-white/20 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-white rounded-full"
-            style={{ width: `${xpPct}%` }}
-            role="progressbar"
-            aria-valuenow={xpCurrent}
-            aria-valuemin={0}
-            aria-valuemax={xpTotal}
-            aria-label="XP progress to Level 9"
-          />
         </div>
       </div>
 
-      {/* ── Scrollable Path ── */}
-      <div className="flex-1 overflow-y-auto pt-7 pb-10">
-
-        <p className="text-center text-[11px] font-bold text-slate-400 uppercase tracking-[0.14em] mb-6 select-none">
-          Your Learning Path
-        </p>
-
-        {/* SVG + absolute-positioned nodes/cards */}
-        <div
-          className="relative mx-auto"
-          style={{ width: PATH_W, height: PATH_H }}
-        >
-          {/* ── Winding path lines ── */}
-          <svg
-            className="absolute inset-0 pointer-events-none"
-            width={PATH_W}
-            height={PATH_H}
-            viewBox={`0 0 ${PATH_W} ${PATH_H}`}
-            aria-hidden="true"
-          >
-            <defs>
-              <linearGradient id="rmGradientDone" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%"   stopColor="#34D399" />
-                <stop offset="100%" stopColor="#38BDF8" />
-              </linearGradient>
-            </defs>
-
-            {/* Gray dashed base (full path — background) */}
-            <path
-              d={`M ${N1.x} ${N1.y} C ${N1.x} ${N1.y + 80}, ${N2.x} ${N2.y - 80}, ${N2.x} ${N2.y}
-                  C ${N2.x} ${N2.y + 80}, ${N3.x} ${N3.y - 80}, ${N3.x} ${N3.y}`}
-              stroke="#E2E8F0"
-              strokeWidth="5"
-              strokeDasharray="10 7"
-              strokeLinecap="round"
-              fill="none"
-            />
-
-            {/* Colored overlay for completed segment (N1 → N2) */}
-            <path
-              d={`M ${N1.x} ${N1.y} C ${N1.x} ${N1.y + 80}, ${N2.x} ${N2.y - 80}, ${N2.x} ${N2.y}`}
-              stroke="url(#rmGradientDone)"
-              strokeWidth="5"
-              strokeLinecap="round"
-              fill="none"
-            />
-          </svg>
-
-          {/* ── Node 1: Curiosity (completed, left) ── */}
-          <div
-            className="absolute z-10"
-            style={{ left: N1.x, top: N1.y, transform: 'translate(-50%, -50%)' }}
-          >
-            <NodeBadge status="completed" Icon={Sparkles} />
+      {/* XP Card */}
+      <div className="mx-5 mb-6 bg-blue-600 rounded-2xl p-4 shadow-lg shadow-blue-200">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 bg-white/20 rounded-lg flex items-center justify-center">
+              <Star size={14} fill="white" strokeWidth={0} className="text-white" />
+            </div>
+            <span className="text-white font-bold text-sm">Level 8</span>
           </div>
-          {/* Info card — right of node 1 */}
-          <div className="absolute" style={{ left: N1.x + 52, top: N1.y - 36 }}>
-            <NodeCard
-              title="Curiosity"
-              subtitle="Completed · 5/5"
-              xp="+120 XP"
-              status="completed"
-            />
-          </div>
+          <span className="text-white/70 text-xs font-semibold">{xp} / {xpMax} XP</span>
+        </div>
+        <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+          <div className="h-full bg-white rounded-full transition-all" style={{ width: `${(xp/xpMax)*100}%` }} />
+        </div>
+        <p className="text-white/70 text-xs mt-2 font-medium">58% to Level 9 — keep going!</p>
+      </div>
 
-          {/* ── Node 2: Core Skills (active, right) ── */}
-          <div
-            className="absolute z-10"
-            style={{ left: N2.x, top: N2.y, transform: 'translate(-50%, -50%)' }}
-          >
-            <NodeBadge status="active" Icon={Zap} />
-          </div>
-          {/* Info card — left of node 2 */}
-          <div className="absolute" style={{ left: N2.x - 52 - 128, top: N2.y - 36 }}>
-            <NodeCard
-              title="Core Skills"
-              subtitle="In progress · 3/5"
-              xp="+150 XP"
-              status="active"
-            />
-          </div>
-          {/* "Active" label above node 2 */}
-          <div
-            className="absolute flex justify-center"
-            style={{ left: N2.x - 36, top: N2.y - 68, width: 72 }}
-          >
-            <span className="bg-blue-500 text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full shadow-sm select-none">
-              Active
-            </span>
-          </div>
+      <div className="flex-1 overflow-y-auto px-5 pb-8">
 
-          {/* ── Node 3: Logistics (locked, left) ── */}
-          <div
-            className="absolute z-10"
-            style={{ left: N3.x, top: N3.y, transform: 'translate(-50%, -50%)' }}
-          >
-            <NodeBadge status="locked" Icon={Lock} />
-          </div>
-          {/* Info card — right of node 3 */}
-          <div className="absolute" style={{ left: N3.x + 52, top: N3.y - 36 }}>
-            <NodeCard
-              title="Logistics"
-              subtitle="Locked"
-              xp="+200 XP"
-              status="locked"
-            />
-          </div>
+        {/* Path section */}
+        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Learning Path</p>
+        <div className="flex flex-col gap-0">
+          {NODES.map((n, i) => {
+            const color = STATUS_COLOR[n.status];
+            const isActive = n.status === 'active';
+            const isDone   = n.status === 'completed';
+            const isLocked = n.status === 'locked';
+            return (
+              <div key={n.key} className="flex items-stretch gap-4">
+                {/* Timeline */}
+                <div className="flex flex-col items-center w-10 shrink-0">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white shrink-0 ${isDone ? 'bg-emerald-500' : isActive ? 'bg-blue-600' : 'bg-slate-100'}`}
+                    style={{ boxShadow: isActive ? '0 0 0 4px rgba(37,99,235,0.15)' : undefined }}>
+                    {isDone  ? <CheckCircle2 size={18} className="text-white" /> :
+                     isLocked ? <Lock size={16} className="text-slate-300" /> :
+                     <n.Icon size={18} className="text-white" />}
+                  </div>
+                  {i < NODES.length - 1 && (
+                    <div className="w-0.5 flex-1 my-1 rounded-full" style={{ background: color.bar, opacity: isLocked ? 0.2 : 0.3 }} />
+                  )}
+                </div>
+
+                {/* Card */}
+                <div className={`flex-1 mb-4 rounded-2xl border p-4 ${isLocked ? 'opacity-50 bg-slate-50 border-slate-100' : isActive ? 'bg-blue-50 border-blue-100' : 'bg-white border-slate-100 shadow-sm'}`}>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className={`font-bold text-[15px] ${isLocked ? 'text-slate-400' : 'text-slate-800'}`}>{n.label}</p>
+                      <p className={`text-[12px] mt-0.5 ${isLocked ? 'text-slate-300' : 'text-slate-500'}`}>{n.sub}</p>
+                    </div>
+                    <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${isDone ? 'bg-emerald-50 text-emerald-600' : isActive ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-400'}`}>
+                      {n.xp}
+                    </span>
+                  </div>
+                  {isActive && (
+                    <button onClick={() => onNavigate('swipe')}
+                      className="mt-3 w-full bg-blue-600 text-white text-[13px] font-bold py-2.5 rounded-xl flex items-center justify-center gap-1 active:scale-95 transition-transform shadow-sm shadow-blue-200">
+                      Continue <ChevronRight size={14} />
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        {/* ── Motivational footer chip ── */}
-        <div className="flex justify-center mt-6 px-6">
-          <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-700 text-[12px] font-semibold px-4 py-2.5 rounded-full shadow-sm select-none">
-            <Trophy size={14} aria-hidden="true" />
-            <span>You're 58% to Level 9 — keep going!</span>
+        {/* Achievements */}
+        <div className="mt-2">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Achievements</p>
+            <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">{earned}/{ACHIEVEMENTS.length} earned</span>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {ACHIEVEMENTS.map((a) => (
+              <div key={a.l} className={`bg-white rounded-2xl border border-slate-100 shadow-sm p-3.5 ${!a.earned ? 'opacity-40' : ''}`}>
+                <div className="flex items-start justify-between mb-2">
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-lg ${a.earned ? 'bg-amber-50' : 'bg-slate-100'}`}>
+                    {a.earned ? a.i : '🔒'}
+                  </div>
+                  {a.earned && <CheckCircle2 size={14} className="text-emerald-500 mt-0.5" />}
+                </div>
+                <p className="text-slate-800 text-[12px] font-bold leading-tight">{a.l}</p>
+                <p className="text-slate-400 text-[10px] mt-0.5 leading-tight">{a.d}</p>
+              </div>
+            ))}
           </div>
         </div>
 
