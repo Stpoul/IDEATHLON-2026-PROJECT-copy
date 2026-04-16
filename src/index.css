@@ -11,9 +11,16 @@
   --muted-foreground: #64748b;
   --success: #10B981;
   --danger: #ef4444;
-  --font-base: 16px;
+  --font-base: 16px; /* Base scaling variable */
 }
 
+/* Apply scaling to the root html for Tailwind rem support */
+html {
+  font-size: var(--font-base);
+  transition: font-size 0.2s ease-in-out;
+}
+
+/* Dark Mode Theme */
 .dark {
   --background: #0f172a;
   --foreground: #f8fafc;
@@ -23,17 +30,22 @@
   --primary: #a29bfe;
 }
 
+/* Enhanced High Contrast Mode (WCAG AAA) */
 .high-contrast {
   --background: #000000 !important;
   --foreground: #ffffff !important;
   --card: #000000 !important;
   --border: #ffffff !important;
-  --primary: #ffff00 !important;
+  --primary: #ffff00 !important; /* High-vis yellow */
   --muted-foreground: #ffffff !important;
 }
 
-.high-contrast * { border-color: #ffffff !important; border-width: 1px; }
+.high-contrast * {
+  border-color: #ffffff !important;
+  border-width: 1px;
+}
 
+/* Accessibility Feature Classes */
 .font-dyslexic { font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important; }
 
 .filter-protanopia { filter: url('#protanopia'); }
@@ -43,17 +55,24 @@
 
 .reduce-motion * { transition: none !important; animation: none !important; }
 
+/* Font Size Scales */
 .text-size-normal { --font-base: 16px; }
 .text-size-large { --font-base: 20px; }
 .text-size-xlarge { --font-base: 24px; }
 
 body {
   font-family: 'Montserrat', sans-serif;
-  font-size: var(--font-base);
   color: var(--foreground);
   background-color: var(--background);
-  transition: background-color 0.3s, color 0.3s;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.screen-enter { animation: slideUp 0.3s ease-out both; }
-@keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.screen-enter {
+  animation: slideUp 0.3s ease-out both;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
