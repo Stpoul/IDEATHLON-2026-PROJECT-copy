@@ -95,7 +95,7 @@ export default function ImpactScreen({ language, swipeResults }) {
             </div>
             <div>
               <p className="text-xs font-bold text-[var(--muted-foreground)] uppercase">{t(language, 'impact_visibility')}</p>
-              <h3 className="text-2xl font-extrabold text-[var(--foreground)]">1,247 views</h3>
+              <h3 className="text-2xl font-extrabold text-[var(--foreground)]">{t(language, 'impact_visibility_value')}</h3>
             </div>
           </div>
         </div>

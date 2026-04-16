@@ -87,7 +87,7 @@ export default function FAQScreen({ language, hasConsent, onConsent }) {
           {t(language, 'faq_gdpr_body')}
         </p>
         <button className="text-xs font-bold text-[var(--danger)] underline">
-          Request Data Deletion
+          {t(language, 'faq_delete_data')}
         </button>
       </AccordionSection>
 

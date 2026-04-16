@@ -11,7 +11,18 @@ export const TRANSLATIONS = {
     high_contrast: 'High Contrast',
     dyslexic_font: 'Dyslexic Font',
     font_size: 'Font size',
+    font_size_normal: 'Normal',
+    font_size_large: 'Large',
+    font_size_xlarge: 'X-Large',
     reset_defaults: 'Reset to Defaults',
+    // Language section (inside modal)
+    settings_language: 'Language',
+    // Consent section (inside modal)
+    settings_consent: 'Age & Privacy',
+    consent_over16_label: 'Over 16 – Full Access',
+    consent_under16_label: 'Under 16 – School Mode',
+    consent_not_set: 'Not confirmed yet',
+    consent_reset: 'Reset consent',
     // RoadmapScreen
     roadmap_greeting: 'Liberec Region Hub 👋',
     roadmap_title: "Jan's Journey",
@@ -38,7 +49,16 @@ export const TRANSLATIONS = {
     swipe_title: 'Discover',
     swipe_subtitle: 'Swipe to shape your path',
     swipe_progress: 'Card {{current}} of {{total}}',
+    swipe_streak: 'Day Streak',
     swipe_teaching_label: 'Teaching Style',
+    cat_Technical: 'Technical',
+    cat_Creative: 'Creative',
+    cat_Science: 'Science',
+    cat_Outdoors: 'Outdoors',
+    cat_Healthcare: 'Healthcare',
+    cat_Social: 'Social',
+    cat_Logic: 'Logic',
+    cat_Business: 'Business',
     // BridgeScreen
     bridge_title: 'Your Pathways',
     bridge_subtitle: 'Tailored to your swipes',
@@ -55,6 +75,7 @@ export const TRANSLATIONS = {
     impact_learning_styles: 'Class Learning Styles',
     impact_completion: 'Student Completion',
     impact_visibility: 'School Visibility',
+    impact_visibility_value: '1,247 views',
     impact_regional_rank: 'Regional Rank',
     impact_no_data: 'Complete some Discover cards to see insights',
     // FAQScreen
@@ -74,6 +95,7 @@ export const TRANSLATIONS = {
     faq_alumni: 'Alumni Response',
     faq_ask_placeholder: 'Ask about scholarships, exams...',
     faq_school_mode: '🏫 School Mode – data managed by your institution',
+    faq_delete_data: 'Request Data Deletion',
   },
   cz: {
     // Tabs
@@ -87,7 +109,18 @@ export const TRANSLATIONS = {
     high_contrast: 'Vysoký kontrast',
     dyslexic_font: 'Dyslektické písmo',
     font_size: 'Velikost písma',
+    font_size_normal: 'Normální',
+    font_size_large: 'Velké',
+    font_size_xlarge: 'Velmi velké',
     reset_defaults: 'Obnovit výchozí',
+    // Language section (inside modal)
+    settings_language: 'Jazyk',
+    // Consent section (inside modal)
+    settings_consent: 'Věk a soukromí',
+    consent_over16_label: 'Nad 16 – Plný přístup',
+    consent_under16_label: 'Pod 16 – Školní režim',
+    consent_not_set: 'Zatím nepotvrzeno',
+    consent_reset: 'Obnovit souhlas',
     // RoadmapScreen
     roadmap_greeting: 'Liberecký regionální hub 👋',
     roadmap_title: 'Janina cesta',
@@ -114,7 +147,16 @@ export const TRANSLATIONS = {
     swipe_title: 'Objevuj',
     swipe_subtitle: 'Swipuj a formuj svou cestu',
     swipe_progress: 'Karta {{current}} z {{total}}',
+    swipe_streak: 'Denní série',
     swipe_teaching_label: 'Styl učení',
+    cat_Technical: 'Technické',
+    cat_Creative: 'Kreativní',
+    cat_Science: 'Věda',
+    cat_Outdoors: 'Příroda',
+    cat_Healthcare: 'Zdravotnictví',
+    cat_Social: 'Společenské',
+    cat_Logic: 'Logika',
+    cat_Business: 'Podnikání',
     // BridgeScreen
     bridge_title: 'Tvé cesty',
     bridge_subtitle: 'Přizpůsobeno tvým volbám',
@@ -131,6 +173,7 @@ export const TRANSLATIONS = {
     impact_learning_styles: 'Styly učení třídy',
     impact_completion: 'Dokončení studenty',
     impact_visibility: 'Viditelnost školy',
+    impact_visibility_value: '1 247 zobrazení',
     impact_regional_rank: 'Regionální pořadí',
     impact_no_data: 'Dokonči karty Objevuj pro zobrazení dat',
     // FAQScreen
@@ -150,6 +193,7 @@ export const TRANSLATIONS = {
     faq_alumni: 'Odpověď absolventa',
     faq_ask_placeholder: 'Ptej se na stipendia, zkoušky...',
     faq_school_mode: '🏫 Školní režim – data spravuje tvá instituce',
+    faq_delete_data: 'Žádat o smazání dat',
   },
 };
 

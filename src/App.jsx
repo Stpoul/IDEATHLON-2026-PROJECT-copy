@@ -62,20 +62,12 @@ export default function App() {
 
         {/* Floating Controls */}
         <div className="absolute top-4 left-4 right-4 z-50 flex justify-between">
-          <div className="flex gap-2">
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="p-3 bg-white/90 dark:bg-slate-800 rounded-full shadow-lg border border-slate-200 dark:border-slate-700"
-            >
-              {darkMode ? <Sun size={20} className="text-amber-500" /> : <Moon size={20} className="text-slate-600" />}
-            </button>
-            <button
-              onClick={() => setLanguage(l => l === 'en' ? 'cz' : 'en')}
-              className="px-4 py-3 bg-white/90 dark:bg-slate-800 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300"
-            >
-              {language === 'en' ? 'CZ' : 'EN'}
-            </button>
-          </div>
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="p-3 bg-white/90 dark:bg-slate-800 rounded-full shadow-lg border border-slate-200 dark:border-slate-700"
+          >
+            {darkMode ? <Sun size={20} className="text-amber-500" /> : <Moon size={20} className="text-slate-600" />}
+          </button>
           <button
             onClick={() => setShowAccess(true)}
             className="p-3 bg-[var(--primary)] text-white rounded-full shadow-lg"
@@ -106,20 +98,61 @@ export default function App() {
                   {t(language, 'dyslexic_font')}
                 </button>
               </div>
-              <div className="mb-8">
+              <div className="mb-6">
                 <h3 className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3">{t(language, 'font_size')}</h3>
                 <div className="flex gap-2">
-                  {['normal', 'large', 'xlarge'].map(s => (
+                  {[
+                    { key: 'normal', label: 'font_size_normal' },
+                    { key: 'large',  label: 'font_size_large'  },
+                    { key: 'xlarge', label: 'font_size_xlarge' },
+                  ].map(({ key, label }) => (
                     <button
-                      key={s}
-                      onClick={() => setTextSize(s)}
-                      className={`flex-1 py-3 rounded-xl border-2 font-bold capitalize ${textSize === s ? 'bg-[var(--primary)] text-white' : ''}`}
+                      key={key}
+                      onClick={() => setTextSize(key)}
+                      className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs ${textSize === key ? 'bg-[var(--primary)] text-white' : ''}`}
                     >
-                      {s}
+                      {t(language, label)}
                     </button>
                   ))}
                 </div>
               </div>
+
+              {/* Language */}
+              <div className="mb-6">
+                <h3 className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3">{t(language, 'settings_language')}</h3>
+                <div className="flex gap-2">
+                  {['en', 'cz'].map(lang => (
+                    <button
+                      key={lang}
+                      onClick={() => setLanguage(lang)}
+                      className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs uppercase ${language === lang ? 'bg-[var(--primary)] text-white' : ''}`}
+                    >
+                      {lang}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Consent */}
+              <div className="mb-6">
+                <h3 className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3">{t(language, 'settings_consent')}</h3>
+                <div className="bg-[var(--background)] rounded-xl px-4 py-3 text-xs text-[var(--muted-foreground)] mb-2 border border-[var(--border)]">
+                  {hasConsent === null
+                    ? t(language, 'consent_not_set')
+                    : hasConsent
+                    ? t(language, 'consent_over16_label')
+                    : t(language, 'consent_under16_label')}
+                </div>
+                {hasConsent !== null && (
+                  <button
+                    onClick={() => setHasConsent(null)}
+                    className="w-full py-3 border-2 border-[var(--border)] text-[var(--muted-foreground)] font-bold text-xs rounded-xl active:scale-95 transition-all"
+                  >
+                    {t(language, 'consent_reset')}
+                  </button>
+                )}
+              </div>
+
               <button
                 onClick={() => { setDarkMode(false); setHighContrast(false); setDyslexic(false); setTextSize('normal'); setCb('none'); }}
                 className="w-full py-4 border-2 border-red-100 text-red-500 font-bold rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all"

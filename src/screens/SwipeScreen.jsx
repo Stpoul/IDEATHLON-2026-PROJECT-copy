@@ -54,7 +54,7 @@ export default function SwipeScreen({ onNavigate, globalStreak, language, onSwip
         </div>
         <div className="flex-1 flex items-center gap-2.5 bg-orange-100 dark:bg-orange-900/40 rounded-2xl p-3">
           <Flame size={18} className="text-orange-500" />
-          <span className="text-orange-600 dark:text-orange-300 text-sm font-bold">{globalStreak} Day Streak</span>
+          <span className="text-orange-600 dark:text-orange-300 text-sm font-bold">{globalStreak} {t(language, 'swipe_streak')}</span>
         </div>
       </div>
 
@@ -75,7 +75,7 @@ export default function SwipeScreen({ onNavigate, globalStreak, language, onSwip
         <div className="w-full bg-[var(--card)] rounded-3xl p-8 shadow-xl border border-[var(--border)] text-center transition-colors">
           <div className="text-6xl mb-4">{card.e}</div>
           <span className="text-xs font-bold uppercase tracking-widest text-[var(--primary)] mb-2 block">
-            {isTeachingStyle ? t(language, 'swipe_teaching_label') : card.c}
+            {isTeachingStyle ? t(language, 'swipe_teaching_label') : t(language, `cat_${card.c}`)}
           </span>
           <p className="text-[var(--foreground)] text-xl font-bold leading-snug">
             {card.text[language] ?? card.text.en}
