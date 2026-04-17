@@ -96,6 +96,45 @@ export const TRANSLATIONS = {
     faq_ask_placeholder: 'Ask about scholarships, exams...',
     faq_school_mode: '🏫 School Mode – data managed by your institution',
     faq_delete_data: 'Request Data Deletion',
+    // Colorblind mode
+    settings_colorblind: 'Colorblind Mode',
+    cb_none: 'Off',
+    cb_protanopia: 'Prot.',
+    cb_deuteranopia: 'Deut.',
+    cb_tritanopia: 'Trit.',
+    cb_achromatopsia: 'Achrom.',
+    // Age group demo
+    settings_age_group: 'Demo: Age Group',
+    age_under16: 'Under 16',
+    age_16plus: '16+',
+    // Rewards modal
+    rewards_btn: 'Rewards',
+    rewards_xp_demo: '+100 XP (Demo)',
+    rewards_title: 'Your Rewards',
+    rewards_achievements: 'Achievements',
+    rewards_perks: 'Regional Perks',
+    // Achievements
+    ach_first_swipe: 'First Steps',
+    ach_first_swipe_desc: 'Started your journey',
+    ach_chick: 'Growing!',
+    ach_chick_desc: 'Reached 200 XP',
+    ach_halfway: 'Halfway There!',
+    ach_halfway_desc: 'Reached 300 XP',
+    ach_fledgling: 'Taking Flight',
+    ach_fledgling_desc: 'Reached 400 XP',
+    ach_champion: 'Champion!',
+    ach_champion_desc: 'Fully evolved at 600 XP',
+    // Regional perks
+    perk_museum: 'Liberec Museum',
+    perk_museum_desc: 'Free entry with SkillSwipe profile',
+    perk_pool: 'Aquacentrum Liberec',
+    perk_pool_desc: '50% off for top achievers',
+    perk_mentor: 'Industry Mentor',
+    perk_mentor_desc: 'Get matched with a regional professional',
+    // BridgeScreen scholarship banner
+    bridge_scholarship_title: 'Premium Scholarship Matches',
+    bridge_scholarship_desc: 'As a 16+ user, you qualify for regional scholarship matching.',
+    bridge_scholarship_cta: 'Explore Scholarships',
   },
   cz: {
     // Tabs
@@ -194,6 +233,45 @@ export const TRANSLATIONS = {
     faq_ask_placeholder: 'Ptej se na stipendia, zkoušky...',
     faq_school_mode: '🏫 Školní režim – data spravuje tvá instituce',
     faq_delete_data: 'Žádat o smazání dat',
+    // Colorblind mode
+    settings_colorblind: 'Barvoslepost',
+    cb_none: 'Vyp.',
+    cb_protanopia: 'Prot.',
+    cb_deuteranopia: 'Deut.',
+    cb_tritanopia: 'Trit.',
+    cb_achromatopsia: 'Achrom.',
+    // Age group demo
+    settings_age_group: 'Demo: Věková skupina',
+    age_under16: 'Pod 16',
+    age_16plus: '16+',
+    // Rewards modal
+    rewards_btn: 'Odměny',
+    rewards_xp_demo: '+100 XP (Demo)',
+    rewards_title: 'Vaše odměny',
+    rewards_achievements: 'Úspěchy',
+    rewards_perks: 'Regionální výhody',
+    // Achievements
+    ach_first_swipe: 'První kroky',
+    ach_first_swipe_desc: 'Zahájil/a jsi svou cestu',
+    ach_chick: 'Rosteš!',
+    ach_chick_desc: 'Dosáhl/a 200 XP',
+    ach_halfway: 'V půli cesty!',
+    ach_halfway_desc: 'Dosáhl/a 300 XP',
+    ach_fledgling: 'Vzlétáš',
+    ach_fledgling_desc: 'Dosáhl/a 400 XP',
+    ach_champion: 'Šampión!',
+    ach_champion_desc: 'Plně vyvinutý/á na 600 XP',
+    // Regional perks
+    perk_museum: 'Liberecké muzeum',
+    perk_museum_desc: 'Vstup zdarma s profilem SkillSwipe',
+    perk_pool: 'Aquacentrum Liberec',
+    perk_pool_desc: '50% sleva pro nejlepší studenty',
+    perk_mentor: 'Průmyslový mentor',
+    perk_mentor_desc: 'Párování s regionálním odborníkem',
+    // BridgeScreen scholarship banner
+    bridge_scholarship_title: 'Prémiové stipendijní shody',
+    bridge_scholarship_desc: 'Jako uživatel 16+ máš nárok na regionální stipendijní párování.',
+    bridge_scholarship_cta: 'Prozkoumat stipendia',
   },
 };
 
