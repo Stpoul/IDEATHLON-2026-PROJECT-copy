@@ -1,9 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Flame, Zap, X, Heart } from 'lucide-react';
 import { t } from '../i18n';
 
-const SCENARIOS = [
-  // 12 Vocational cards
+const JUNIOR_DECK = [
+  { e: '🔧', text: { en: 'Do you enjoy fixing things around the house?', cz: 'Baví tě opravovat věci doma?' }, c: 'Technical' },
+  { e: '🎨', text: { en: 'Do you love drawing, painting, or making art?', cz: 'Miluješ kreslení, malování nebo tvorbu umění?' }, c: 'Creative' },
+  { e: '🌱', text: { en: 'Do you care about protecting nature and animals?', cz: 'Záleží ti na ochraně přírody a zvířat?' }, c: 'Outdoors' },
+  { e: '🤝', text: { en: 'Do you enjoy helping friends when they have problems?', cz: 'Baví tě pomáhat přátelům s jejich problémy?' }, c: 'Social' },
+  { e: '🔢', text: { en: 'Do you like solving puzzles and brain teasers?', cz: 'Rád/a řešíš hádanky a hlavolamy?' }, c: 'Logic' },
+  { e: '🧪', text: { en: 'Are you curious about how things work scientifically?', cz: 'Jsi zvídavý/á, jak věci fungují vědecky?' }, c: 'Science' },
+  { e: '💰', text: { en: 'Do you like coming up with ideas to earn money?', cz: 'Rád/a vymýšlíš nápady, jak vydělat peníze?' }, c: 'Business' },
+  { e: '🏥', text: { en: 'Would you enjoy taking care of someone who is sick?', cz: 'Baví tě starat se o nemocné lidi?' }, c: 'Healthcare' },
+  { e: '🖥️', text: { en: 'Do you spend a lot of time using computers or tablets?', cz: 'Trávíš hodně času u počítačů nebo tabletů?' }, c: 'Technical' },
+  { e: '🎭', text: { en: 'Do you enjoy acting, performing, or telling stories?', cz: 'Baví tě hrát divadlo, vystupovat nebo vyprávět příběhy?' }, c: 'Creative' },
+  { e: '📚', text: { en: '"I wish my teachers used more hands-on experiments in class."', cz: '"Přál/a bych si, aby učitelé používali více praktických pokusů."' }, c: 'ts_experiments' },
+  { e: '💡', text: { en: '"I find it easier to learn through videos than lectures."', cz: '"Snáze se učím přes videa než přednášky."' }, c: 'ts_video' },
+  { e: '🖥️', text: { en: '"I learn better when we work in groups rather than alone."', cz: '"Lépe se učím, když pracujeme ve skupinách."' }, c: 'ts_group' },
+];
+
+const SENIOR_DECK = [
   { e: '🔧', text: { en: 'Dismantle a radio to see how it works', cz: 'Rozebrat rádio, abys viděl/a jak funguje' }, c: 'Technical' },
   { e: '🎨', text: { en: 'Design a professional logo for a local business', cz: 'Navrhnout profesionální logo pro místní firmu' }, c: 'Creative' },
   { e: '🔬', text: { en: 'Perform a chemistry experiment at home', cz: 'Provést chemický pokus doma' }, c: 'Science' },
@@ -16,7 +31,6 @@ const SCENARIOS = [
   { e: '✍️', text: { en: 'Write a short story about a sci-fi adventure', cz: 'Napsat povídku o sci-fi dobrodružství' }, c: 'Creative' },
   { e: '💊', text: { en: 'Research how medicines are developed and tested', cz: 'Zkoumat, jak se vyvíjejí a testují léky' }, c: 'Healthcare' },
   { e: '📈', text: { en: 'Launch a small business idea and pitch it to a panel', cz: 'Spustit nápad na malý podnik a prezentovat ho porotě' }, c: 'Business' },
-  // 6 Teaching Style cards
   { e: '📚', text: { en: '"I wish my teachers used more hands-on experiments in class."', cz: '"Přál/a bych si, aby učitelé používali více praktických pokusů."' }, c: 'ts_experiments' },
   { e: '💡', text: { en: '"I find it easier to learn through videos than lectures."', cz: '"Snáze se učím přes videa než přednášky."' }, c: 'ts_video' },
   { e: '🖥️', text: { en: '"I learn better when we work in groups rather than alone."', cz: '"Lépe se učím, když pracujeme ve skupinách."' }, c: 'ts_group' },
@@ -25,19 +39,22 @@ const SCENARIOS = [
   { e: '🧪', text: { en: '"I prefer learning by doing rather than reading from a book."', cz: '"Raději se učím praxí než čtením z knihy."' }, c: 'ts_practical' },
 ];
 
-export default function SwipeScreen({ onNavigate, globalStreak, language, onSwipeResult }) {
+export default function SwipeScreen({ onNavigate, globalStreak, language, onSwipeResult, ageGroup }) {
+  const DECK = ageGroup === '16plus' ? SENIOR_DECK : JUNIOR_DECK;
   const [idx, setIdx] = useState(0);
 
+  useEffect(() => { setIdx(0); }, [ageGroup]);
+
   const handleSwipe = (liked) => {
-    onSwipeResult(SCENARIOS[idx].c, liked);
-    if (idx < SCENARIOS.length - 1) {
+    onSwipeResult(DECK[idx].c, liked);
+    if (idx < DECK.length - 1) {
       setIdx(idx + 1);
     } else {
       onNavigate('bridge');
     }
   };
 
-  const card = SCENARIOS[idx];
+  const card = DECK[idx];
   const isTeachingStyle = card.c.startsWith('ts_');
 
   return (
@@ -60,13 +77,13 @@ export default function SwipeScreen({ onNavigate, globalStreak, language, onSwip
 
       <div className="mb-4">
         <div className="flex justify-between text-[10px] font-bold text-[var(--muted-foreground)] mb-1">
-          <span>{t(language, 'swipe_progress', { current: idx + 1, total: SCENARIOS.length })}</span>
-          <span>{Math.round(((idx + 1) / SCENARIOS.length) * 100)}%</span>
+          <span>{t(language, 'swipe_progress', { current: idx + 1, total: DECK.length })}</span>
+          <span>{Math.round(((idx + 1) / DECK.length) * 100)}%</span>
         </div>
         <div className="h-1.5 bg-[var(--border)] rounded-full overflow-hidden">
           <div
             className="h-full bg-[var(--primary)] rounded-full transition-all duration-300"
-            style={{ width: `${((idx + 1) / SCENARIOS.length) * 100}%` }}
+            style={{ width: `${((idx + 1) / DECK.length) * 100}%` }}
           />
         </div>
       </div>
