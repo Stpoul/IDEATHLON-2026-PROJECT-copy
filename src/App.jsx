@@ -102,94 +102,48 @@ export default function App() {
                   <button onClick={() => setShowAccess(false)} className="p-2"><X /></button>
                 </div>
 
-                {/* Visual toggles */}
                 <div className="grid grid-cols-2 gap-3 mb-6">
-                  <button
-                    onClick={() => setHighContrast(!highContrast)}
-                    className={`p-4 rounded-xl border-2 font-bold text-xs ${activeCls(highContrast)}`}
-                  >
-                    {t(language, 'high_contrast')}
-                  </button>
-                  <button
-                    onClick={() => setDyslexic(!dyslexic)}
-                    className={`p-4 rounded-xl border-2 font-bold text-xs ${activeCls(dyslexic)}`}
-                  >
-                    {t(language, 'dyslexic_font')}
-                  </button>
+                  <button onClick={() => setHighContrast(!highContrast)} className={`p-4 rounded-xl border-2 font-bold text-xs ${activeCls(highContrast)}`}>{t(language, 'high_contrast')}</button>
+                  <button onClick={() => setDyslexic(!dyslexic)} className={`p-4 rounded-xl border-2 font-bold text-xs ${activeCls(dyslexic)}`}>{t(language, 'dyslexic_font')}</button>
                 </div>
 
-                {/* Font size */}
                 <div className="mb-6">
                   <h3 className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3">{t(language, 'font_size')}</h3>
                   <div className="flex gap-2">
-                    {[
-                      { key: 'normal', label: 'font_size_normal' },
-                      { key: 'large',  label: 'font_size_large'  },
-                      { key: 'xlarge', label: 'font_size_xlarge' },
-                    ].map(({ key, label }) => (
-                      <button
-                        key={key}
-                        onClick={() => setTextSize(key)}
-                        className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs ${activeCls(textSize === key)}`}
-                      >
-                        {t(language, label)}
-                      </button>
+                    {[{ key: 'normal', label: 'font_size_normal' }, { key: 'large', label: 'font_size_large' }, { key: 'xlarge', label: 'font_size_xlarge' }].map(({ key, label }) => (
+                      <button key={key} onClick={() => setTextSize(key)} className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs ${activeCls(textSize === key)}`}>{t(language, label)}</button>
                     ))}
                   </div>
                 </div>
 
-                {/* Colorblind Mode */}
                 <div className="mb-6">
                   <h3 className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3">{t(language, 'settings_colorblind')}</h3>
                   <div className="flex gap-1.5 flex-wrap">
                     {CB_OPTIONS.map(({ value, labelKey }) => (
-                      <button
-                        key={value}
-                        onClick={() => setCb(value)}
-                        className={`px-3 py-2 rounded-xl border-2 font-bold text-xs ${activeCls(cb === value)}`}
-                      >
-                        {t(language, labelKey)}
-                      </button>
+                      <button key={value} onClick={() => setCb(value)} className={`px-3 py-2 rounded-xl border-2 font-bold text-xs ${activeCls(cb === value)}`}>{t(language, labelKey)}</button>
                     ))}
                   </div>
                 </div>
 
-                {/* Language */}
                 <div className="mb-6">
                   <h3 className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3">{t(language, 'settings_language')}</h3>
                   <div className="flex gap-2">
                     {['en', 'cz'].map(lang => (
-                      <button
-                        key={lang}
-                        onClick={() => setLanguage(lang)}
-                        className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs uppercase ${activeCls(language === lang)}`}
-                      >
-                        {lang}
-                      </button>
+                      <button key={lang} onClick={() => setLanguage(lang)} className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs uppercase ${activeCls(language === lang)}`}>{lang}</button>
                     ))}
                   </div>
                 </div>
 
-                {/* Age Group (Demo) */}
                 <div className="mb-6">
                   <h3 className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3">{t(language, 'settings_age_group')}</h3>
                   <div className="flex gap-2">
-                    {[
-                      { value: 'under16', labelKey: 'age_under16' },
-                      { value: '16plus',  labelKey: 'age_16plus'  },
-                    ].map(({ value, labelKey }) => (
-                      <button
-                        key={value}
-                        onClick={() => setAgeGroup(value)}
-                        className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs ${activeCls(ageGroup === value)}`}
-                      >
-                        {t(language, labelKey)}
-                      </button>
+                    {[ { value: 'under16', labelKey: 'age_under16' }, { value: '16plus', labelKey: 'age_16plus' }].map(({ value, labelKey }) => (
+                      <button key={value} onClick={() => setAgeGroup(value)} className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs ${activeCls(ageGroup === value)}`}>{t(language, labelKey)}</button>
                     ))}
                   </div>
                 </div>
 
-                {/* Consent */}
+                {/* --- THIS WAS THE MISSING BLOCK --- */}
                 <div className="mb-6">
                   <h3 className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3">{t(language, 'settings_consent')}</h3>
                   <div className="bg-[var(--background)] rounded-xl px-4 py-3 text-xs text-[var(--muted-foreground)] mb-2 border border-[var(--border)]">
@@ -208,11 +162,9 @@ export default function App() {
                     </button>
                   )}
                 </div>
+                {/* ---------------------------------- */}
 
-                <button
-                  onClick={() => { setDarkMode(false); setHighContrast(false); setDyslexic(false); setTextSize('normal'); setCb('none'); }}
-                  className="w-full py-4 border-2 border-red-100 text-red-500 font-bold rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all"
-                >
+                <button onClick={() => { setDarkMode(false); setHighContrast(false); setDyslexic(false); setTextSize('normal'); setCb('none'); }} className="w-full py-4 border-2 border-red-100 text-red-500 font-bold rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all">
                   <RotateCcw size={18} /> {t(language, 'reset_defaults')}
                 </button>
               </div>
@@ -240,14 +192,9 @@ export default function App() {
             <ul className="flex">
               {TABS.map(({ id, key, Icon }) => (
                 <li key={id} className="flex-1">
-                  <button
-                    onClick={() => setActiveTab(id)}
-                    className="w-full flex flex-col items-center gap-1 py-3 transition-all duration-150 active:scale-95"
-                  >
+                  <button onClick={() => setActiveTab(id)} className="w-full flex flex-col items-center gap-1 py-3 transition-all duration-150 active:scale-95">
                     <Icon size={22} className={activeTab === id ? 'text-[var(--primary)]' : 'text-[var(--muted-foreground)]'} />
-                    <span className={`text-[10px] font-semibold ${activeTab === id ? 'text-[var(--primary)]' : 'text-[var(--muted-foreground)]'}`}>
-                      {t(language, key)}
-                    </span>
+                    <span className={`text-[10px] font-semibold ${activeTab === id ? 'text-[var(--primary)]' : 'text-[var(--muted-foreground)]'}`}>{t(language, key)}</span>
                   </button>
                 </li>
               ))}
@@ -262,25 +209,14 @@ export default function App() {
 const ColorblindSVGs = () => (
   <svg aria-hidden="true" style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
     <defs>
-      <filter id="protanopia">
-        <feColorMatrix type="matrix" values="0.567 0.433 0 0 0  0.558 0.442 0 0 0  0 0.242 0.758 0 0  0 0 0 1 0" />
-      </filter>
-      <filter id="deuteranopia">
-        <feColorMatrix type="matrix" values="0.625 0.375 0 0 0  0.7 0.3 0 0 0  0 0.3 0.7 0 0  0 0 0 1 0" />
-      </filter>
-      <filter id="tritanopia">
-        <feColorMatrix type="matrix" values="0.95 0.05 0 0 0  0 0.433 0.567 0 0  0 0.475 0.525 0 0  0 0 0 1 0" />
-      </filter>
-      <filter id="achromatopsia">
-        <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0" />
-      </filter>
+      <filter id="protanopia"><feColorMatrix type="matrix" values="0.567 0.433 0 0 0  0.558 0.442 0 0 0  0 0.242 0.758 0 0  0 0 0 1 0" /></filter>
+      <filter id="deuteranopia"><feColorMatrix type="matrix" values="0.625 0.375 0 0 0  0.7 0.3 0 0 0  0 0.3 0.7 0 0  0 0 0 1 0" /></filter>
+      <filter id="tritanopia"><feColorMatrix type="matrix" values="0.95 0.05 0 0 0  0 0.433 0.567 0 0  0 0.475 0.525 0 0  0 0 0 1 0" /></filter>
+      <filter id="achromatopsia"><feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0" /></filter>
     </defs>
   </svg>
 );
 
 const UniversalAccessIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
-    <circle cx="12" cy="4" r="2" />
-    <path d="M20 13c-2-2-5-3-8-3s-6 1-8 3M12 10v6M7 22l5-6 5 6" />
-  </svg>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6"><circle cx="12" cy="4" r="2" /><path d="M20 13c-2-2-5-3-8-3s-6 1-8 3M12 10v6M7 22l5-6 5 6" /></svg>
 );
