@@ -16,6 +16,8 @@ const TABS = [
   { id: 'impact',  key: 'tab_impact',   Icon: BarChart2,     Screen: ImpactScreen  },
 ];
 
+const activeCls = (cond) => cond ? 'bg-[var(--primary)] text-white' : '';
+
 const CB_OPTIONS = [
   { value: 'none',          labelKey: 'cb_none'          },
   { value: 'protanopia',    labelKey: 'cb_protanopia'    },
@@ -119,13 +121,13 @@ export default function App() {
                 <div className="grid grid-cols-2 gap-3 mb-6">
                   <button
                     onClick={() => setHighContrast(!highContrast)}
-                    className={`p-4 rounded-xl border-2 font-bold text-xs ${highContrast ? 'bg-[var(--primary)] text-white' : ''}`}
+                    className={`p-4 rounded-xl border-2 font-bold text-xs ${activeCls(highContrast)}`}
                   >
                     {t(language, 'high_contrast')}
                   </button>
                   <button
                     onClick={() => setDyslexic(!dyslexic)}
-                    className={`p-4 rounded-xl border-2 font-bold text-xs ${dyslexic ? 'bg-[var(--primary)] text-white' : ''}`}
+                    className={`p-4 rounded-xl border-2 font-bold text-xs ${activeCls(dyslexic)}`}
                   >
                     {t(language, 'dyslexic_font')}
                   </button>
@@ -143,7 +145,7 @@ export default function App() {
                       <button
                         key={key}
                         onClick={() => setTextSize(key)}
-                        className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs ${textSize === key ? 'bg-[var(--primary)] text-white' : ''}`}
+                        className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs ${activeCls(textSize === key)}`}
                       >
                         {t(language, label)}
                       </button>
@@ -159,7 +161,7 @@ export default function App() {
                       <button
                         key={value}
                         onClick={() => setCb(value)}
-                        className={`px-3 py-2 rounded-xl border-2 font-bold text-xs ${cb === value ? 'bg-[var(--primary)] text-white' : ''}`}
+                        className={`px-3 py-2 rounded-xl border-2 font-bold text-xs ${activeCls(cb === value)}`}
                       >
                         {t(language, labelKey)}
                       </button>
@@ -175,7 +177,7 @@ export default function App() {
                       <button
                         key={lang}
                         onClick={() => setLanguage(lang)}
-                        className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs uppercase ${language === lang ? 'bg-[var(--primary)] text-white' : ''}`}
+                        className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs uppercase ${activeCls(language === lang)}`}
                       >
                         {lang}
                       </button>
@@ -194,7 +196,7 @@ export default function App() {
                       <button
                         key={value}
                         onClick={() => setAgeGroup(value)}
-                        className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs ${ageGroup === value ? 'bg-[var(--primary)] text-white' : ''}`}
+                        className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs ${activeCls(ageGroup === value)}`}
                       >
                         {t(language, labelKey)}
                       </button>
