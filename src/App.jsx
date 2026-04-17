@@ -72,23 +72,7 @@ export default function App() {
 
   return (
     <>
-      {/* SVG colorblind filter matrices — hidden, referenced by CSS filter-* classes */}
-      <svg aria-hidden="true" style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
-        <defs>
-          <filter id="protanopia">
-            <feColorMatrix type="matrix" values="0.567 0.433 0 0 0  0.558 0.442 0 0 0  0 0.242 0.758 0 0  0 0 0 1 0" />
-          </filter>
-          <filter id="deuteranopia">
-            <feColorMatrix type="matrix" values="0.625 0.375 0 0 0  0.7 0.3 0 0 0  0 0.3 0.7 0 0  0 0 0 1 0" />
-          </filter>
-          <filter id="tritanopia">
-            <feColorMatrix type="matrix" values="0.95 0.05 0 0 0  0 0.433 0.567 0 0  0 0.475 0.525 0 0  0 0 0 1 0" />
-          </filter>
-          <filter id="achromatopsia">
-            <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0" />
-          </filter>
-        </defs>
-      </svg>
+      <ColorblindSVGs />
 
       <div className="bg-slate-200 flex items-center justify-center min-h-[100dvh]">
         <div className="relative w-full max-w-[448px] h-[100dvh] md:h-[90vh] md:max-h-[800px] mx-auto flex flex-col overflow-hidden bg-[var(--background)] shadow-2xl md:rounded-[40px] text-[var(--foreground)] transition-all">
@@ -246,6 +230,7 @@ export default function App() {
               swipeResults={swipeResults}
               onSwipeResult={handleSwipeResult}
               ageGroup={ageGroup}
+              setXp={setXp}
               onAddXp={handleAddXp}
               onResetXp={handleResetXp}
             />
@@ -273,6 +258,25 @@ export default function App() {
     </>
   );
 }
+
+const ColorblindSVGs = () => (
+  <svg aria-hidden="true" style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
+    <defs>
+      <filter id="protanopia">
+        <feColorMatrix type="matrix" values="0.567 0.433 0 0 0  0.558 0.442 0 0 0  0 0.242 0.758 0 0  0 0 0 1 0" />
+      </filter>
+      <filter id="deuteranopia">
+        <feColorMatrix type="matrix" values="0.625 0.375 0 0 0  0.7 0.3 0 0 0  0 0.3 0.7 0 0  0 0 0 1 0" />
+      </filter>
+      <filter id="tritanopia">
+        <feColorMatrix type="matrix" values="0.95 0.05 0 0 0  0 0.433 0.567 0 0  0 0.475 0.525 0 0  0 0 0 1 0" />
+      </filter>
+      <filter id="achromatopsia">
+        <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0" />
+      </filter>
+    </defs>
+  </svg>
+);
 
 const UniversalAccessIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
