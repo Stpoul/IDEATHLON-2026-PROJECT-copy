@@ -1,214 +1,104 @@
 import { useState } from 'react';
-import { Sparkles, Users, TrendingUp, CheckCircle2, Lock, ChevronRight, Star, Trophy, Plus, X, RotateCcw } from 'lucide-react';
-import { t } from '../i18n';
-import { ACHIEVEMENTS, getEarnedAchievements } from '../lib/achievements';
+import { Trophy, Gift, RotateCcw, Zap, CheckCircle, Lock } from 'lucide-react';
 
-const STAGES = [
-  {
-    key: 'discovery',
-    nameKey: 'stage_discovery_name',
-    yearsKey: 'stage_discovery_years',
-    descKey: 'stage_discovery_desc',
-    Icon: Sparkles,
-    status: 'completed',
-  },
-  {
-    key: 'community',
-    nameKey: 'stage_community_name',
-    yearsKey: 'stage_community_years',
-    descKey: 'stage_community_desc',
-    Icon: Users,
-    status: 'active',
-  },
-  {
-    key: 'transition',
-    nameKey: 'stage_transition_name',
-    yearsKey: 'stage_transition_years',
-    descKey: 'stage_transition_desc',
-    Icon: TrendingUp,
-    status: 'locked',
-    xpRequired: 500,
-  },
-];
+export default function RoadmapScreen({ globalXp, setXp }) {
+  const [isRewardsOpen, setIsRewardsOpen] = useState(false);
 
-const REGIONAL_PERKS = [
-  { emoji: '🎫', titleKey: 'perk_museum', descKey: 'perk_museum_desc' },
-  { emoji: '🏊', titleKey: 'perk_pool',   descKey: 'perk_pool_desc'   },
-  { emoji: '🎓', titleKey: 'perk_mentor', descKey: 'perk_mentor_desc' },
-];
-
-function getPet(xp) {
-  if (xp < 100) return { emoji: '🥚', msgKey: 'pet_egg' };
-  if (xp < 200) return { emoji: '🐣', msgKey: 'pet_hatching' };
-  if (xp < 400) return { emoji: '🐥', msgKey: 'pet_chick' };
-  if (xp < 600) return { emoji: '🐦', msgKey: 'pet_fledgling' };
-  return { emoji: '⭐', msgKey: 'pet_champion' };
-}
-
-export default function RoadmapScreen({ onNavigate, globalXp, onAddXp, onResetXp, language }) {
-  const [showRewards, setShowRewards] = useState(false);
-  const pet = getPet(globalXp);
-  const petLevel = Math.floor(globalXp / 100);
-  const XP_MAX = 600;
-  const earnedIds = new Set(getEarnedAchievements(globalXp).map(a => a.id));
+  // Derive Era and Pet from XP
+  const getEra = () => {
+    if (globalXp < 300) return { title: "Discovery Era", desc: "Years 1-2", pet: "🥚" };
+    if (globalXp < 600) return { title: "Community Era", desc: "Year 3", pet: "🐣" };
+    return { title: "Transition Era", desc: "Year 4+", pet: "🐥" };
+  };
+  
+  const currentEra = getEra();
+  const maxCurrentLevelXp = globalXp < 300 ? 300 : globalXp < 600 ? 600 : 1000;
+  const progressPercent = Math.min(100, (globalXp / maxCurrentLevelXp) * 100);
 
   return (
-    <>
-      <div className="flex-1 flex flex-col bg-[var(--background)] screen-enter px-5 pb-8">
-        {/* Header */}
-        <div className="pt-12 pb-5 flex justify-between items-end">
-          <div>
-            <p className="text-[var(--muted-foreground)] text-xs font-medium">{t(language, 'roadmap_greeting')}</p>
-            <h1 className="text-[var(--foreground)] text-2xl font-extrabold mt-0.5">{t(language, 'roadmap_title')}</h1>
-          </div>
-          <div className="flex flex-col items-center gap-0.5">
-            <div className="text-4xl animate-bounce">{pet.emoji}</div>
-            <span className="text-[10px] font-bold text-[var(--primary)] uppercase">{t(language, 'roadmap_pet_level')} {petLevel}</span>
-            <span className="text-[9px] text-[var(--muted-foreground)]">{t(language, pet.msgKey)}</span>
-          </div>
+    <div className="flex-1 p-6 bg-[var(--background)] screen-enter overflow-y-auto pb-24 relative">
+      <div className="pt-8 mb-6 flex justify-between items-center">
+        <div>
+          <h1 className="text-[var(--foreground)] text-3xl font-[800]">Your Journey</h1>
+          <p className="text-[var(--muted-foreground)] text-sm">{currentEra.title} ({currentEra.desc})</p>
         </div>
+        <button 
+          onClick={() => setIsRewardsOpen(true)}
+          className="p-3 bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 rounded-2xl hover:scale-105 transition-transform"
+        >
+          <Trophy size={24} />
+        </button>
+      </div>
 
-        {/* XP Bar */}
-        <div className="mb-4 bg-[var(--primary)] rounded-2xl p-4 shadow-lg text-white">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Star size={14} fill="white" />
-              <span className="font-bold text-sm">{t(language, 'roadmap_level')} 8</span>
-            </div>
-            <span className="text-white/70 text-xs font-semibold">
-              {globalXp} / {XP_MAX} {t(language, 'roadmap_xp_label')}
-            </span>
-          </div>
-          <div className="h-2 bg-white/20 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-white rounded-full transition-all"
-              style={{ width: `${Math.min((globalXp / XP_MAX) * 100, 100)}%` }}
-            />
-          </div>
+      {/* The Timeline & Pet Card */}
+      <div className="bg-[var(--card)] border border-[var(--border)] rounded-3xl p-6 shadow-sm mb-6 flex flex-col items-center">
+        <div className="text-6xl mb-4 animate-bounce-slow">{currentEra.pet}</div>
+        <h2 className="text-xl font-bold text-[var(--foreground)] mb-1">Level {Math.floor(globalXp / 100)}</h2>
+        <div className="w-full bg-[var(--muted)] rounded-full h-4 mb-2 overflow-hidden border border-[var(--border)]">
+          <div 
+            className="bg-[var(--primary)] h-4 rounded-full transition-all duration-1000 ease-out"
+            style={{ width: `${progressPercent}%` }}
+          ></div>
         </div>
+        <p className="text-xs font-bold text-[var(--muted-foreground)] tracking-widest uppercase">
+          {globalXp} / {maxCurrentLevelXp} XP
+        </p>
 
-        {/* Action Buttons */}
-        <div className="flex gap-2 mb-5">
-          <button
-            onClick={() => setShowRewards(true)}
-            className="flex-1 flex items-center justify-center gap-2 bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] font-bold text-xs py-3 rounded-xl active:scale-95 transition-all shadow-sm"
+        {/* GOD MODE DEMO CONTROLS */}
+        <div className="mt-6 flex gap-3 w-full border-t border-[var(--border)] pt-4">
+          <button 
+            onClick={() => setXp(globalXp + 100)}
+            className="flex-1 flex items-center justify-center gap-2 py-2 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 font-bold text-xs rounded-xl active:scale-95 transition-transform"
           >
-            <Trophy size={15} className="text-amber-500" />
-            {t(language, 'rewards_btn')}
+            <Zap size={14} /> +100 XP (Demo)
           </button>
-          <button
-            onClick={onAddXp}
-            className="flex-1 flex items-center justify-center gap-2 bg-emerald-500 text-white font-bold text-xs py-3 rounded-xl active:scale-95 transition-all shadow-sm"
+          <button 
+            onClick={() => setXp(0)}
+            className="flex-1 flex items-center justify-center gap-2 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs rounded-xl active:scale-95 transition-transform"
           >
-            <Plus size={15} />
-            {t(language, 'rewards_xp_demo')}
+            <RotateCcw size={14} /> Reset (Demo)
           </button>
-          <button
-            onClick={onResetXp}
-            className="flex-1 flex items-center justify-center gap-2 bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)] font-bold text-xs py-3 rounded-xl active:scale-95 transition-all shadow-sm"
-          >
-            <RotateCcw size={15} />
-            {t(language, 'rewards_reset_xp')}
-          </button>
-        </div>
-
-        {/* Stage Timeline */}
-        <div className="flex-1">
-          {STAGES.map((stage, i) => {
-            const isLocked = stage.status === 'locked' && globalXp < (stage.xpRequired ?? 0);
-            return (
-              <div key={stage.key} className="flex items-stretch gap-4 mb-4">
-                <div className="flex flex-col items-center w-10 shrink-0">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white ${stage.status === 'completed' ? 'bg-emerald-500' : stage.status === 'active' ? 'bg-[var(--primary)]' : 'bg-slate-200 dark:bg-slate-700'}`}>
-                    {stage.status === 'completed'
-                      ? <CheckCircle2 size={18} />
-                      : isLocked
-                      ? <Lock size={18} className="text-slate-400" />
-                      : <stage.Icon size={18} />}
-                  </div>
-                  {i < STAGES.length - 1 && (
-                    <div className="w-0.5 flex-1 my-1 bg-slate-200 dark:bg-slate-700" />
-                  )}
-                </div>
-                <div className={`flex-1 p-4 rounded-2xl border ${stage.status === 'active' ? 'bg-indigo-50 border-indigo-100 dark:bg-slate-800 dark:border-indigo-900' : 'bg-[var(--card)] border-[var(--border)]'}`}>
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="font-bold text-[var(--foreground)] text-sm">{t(language, stage.nameKey)}</p>
-                    <span className="text-[9px] font-bold text-[var(--muted-foreground)] uppercase">{t(language, stage.yearsKey)}</span>
-                  </div>
-                  <p className="text-xs text-[var(--muted-foreground)] leading-snug">{t(language, stage.descKey)}</p>
-                  {stage.status === 'active' && (
-                    <button
-                      onClick={() => onNavigate('swipe')}
-                      className="mt-3 w-full bg-[var(--primary)] text-white text-xs font-bold py-2 rounded-xl flex items-center justify-center gap-1 active:scale-95 transition-all"
-                    >
-                      {t(language, 'stage_continue')} <ChevronRight size={14} />
-                    </button>
-                  )}
-                  {isLocked && (
-                    <p className="mt-2 text-[10px] text-[var(--muted-foreground)]">
-                      🔒 {stage.xpRequired} {t(language, 'roadmap_xp_label')} required
-                    </p>
-                  )}
-                </div>
-              </div>
-            );
-          })}
         </div>
       </div>
 
-      {/* Rewards Modal — fixed overlay */}
-      {showRewards && (
-        <div className="fixed inset-0 bg-black/50 z-[200] flex items-end justify-center backdrop-blur-sm">
-          <div className="bg-[var(--card)] w-full max-w-[448px] p-6 rounded-t-[30px] shadow-2xl max-h-[85dvh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold flex items-center gap-2">
-                <Trophy size={20} className="text-amber-500" />
-                {t(language, 'rewards_title')}
-              </h2>
-              <button onClick={() => setShowRewards(false)} className="p-2"><X size={20} /></button>
+      {/* Rewards Modal Overlay */}
+      {isRewardsOpen && (
+        <div className="fixed inset-0 z-[110] bg-black/60 flex items-center justify-center p-4 screen-enter">
+          <div className="bg-[var(--card)] border border-[var(--border)] w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl">
+            <div className="p-6 text-center border-b border-[var(--border)] bg-slate-50 dark:bg-slate-900">
+              <Gift size={32} className="mx-auto text-[var(--primary)] mb-2" />
+              <h2 className="text-2xl font-bold text-[var(--foreground)]">Regional Rewards</h2>
+              <p className="text-xs text-[var(--muted-foreground)]">Your XP unlocks real-world perks.</p>
             </div>
-
-            {/* Achievements */}
-            <p className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] tracking-widest mb-3">
-              {t(language, 'rewards_achievements')}
-            </p>
-            <div className="space-y-2 mb-6">
-              {ACHIEVEMENTS.map(ach => {
-                const earned = earnedIds.has(ach.id);
-                return (
-                  <div
-                    key={ach.id}
-                    className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${earned ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800' : 'bg-[var(--background)] border-[var(--border)] opacity-40'}`}
-                  >
-                    <span className="text-2xl">{ach.emoji}</span>
-                    <div className="flex-1">
-                      <p className="font-bold text-xs text-[var(--foreground)]">{t(language, ach.titleKey)}</p>
-                      <p className="text-[10px] text-[var(--muted-foreground)]">{t(language, ach.descKey)}</p>
-                    </div>
-                    {earned && <CheckCircle2 size={16} className="text-amber-500 shrink-0" />}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Regional Perks */}
-            <p className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] tracking-widest mb-3">
-              {t(language, 'rewards_perks')}
-            </p>
-            <div className="space-y-2">
-              {REGIONAL_PERKS.map(perk => (
-                <div key={perk.titleKey} className="flex items-center gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--card)]">
-                  <span className="text-2xl">{perk.emoji}</span>
-                  <div>
-                    <p className="font-bold text-xs text-[var(--foreground)]">{t(language, perk.titleKey)}</p>
-                    <p className="text-[10px] text-[var(--muted-foreground)]">{t(language, perk.descKey)}</p>
-                  </div>
+            <div className="p-6 space-y-4 max-h-[60vh] overflow-y-auto">
+              {/* Unlocked Reward */}
+              <div className="flex items-center gap-4 p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
+                <CheckCircle className="text-emerald-500" size={24} />
+                <div>
+                  <p className="font-bold text-[var(--foreground)] text-sm">15% Off Liberec Cinema</p>
+                  <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Unlocked at 300 XP</p>
                 </div>
-              ))}
+              </div>
+              {/* Locked Reward */}
+              <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-[var(--border)] opacity-70">
+                <Lock className="text-[var(--muted-foreground)]" size={24} />
+                <div>
+                  <p className="font-bold text-[var(--foreground)] text-sm">Free Coffee @ Turnov Cafe</p>
+                  <p className="text-xs text-[var(--muted-foreground)] font-medium">Locks at 600 XP (Currently {globalXp})</p>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 bg-[var(--background)]">
+              <button 
+                onClick={() => setIsRewardsOpen(false)}
+                className="w-full py-3 bg-[var(--primary)] text-white font-bold rounded-xl active:scale-95"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

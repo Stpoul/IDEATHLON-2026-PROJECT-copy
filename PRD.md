@@ -3,19 +3,20 @@
 **Mission:** School-Integrated Regional Talent Pipeline & Economic Driver.
 
 ## 1. Business, Legal & Economic Architecture
-* **GTM:** School-Led B2B distribution (marketing/recruitment tool for 8th-10th grade).
-* **B2C Premium Model:** 16+ freemium tier unlocks direct university matching and "Premium Scholarship Matches".
-* **Regional Economy Integration:** Achievements are tied to real-world regional rewards (e.g., "15% off Liberec Cinema") to drive local economic engagement.
-* **Compliance:** GDPR-by-Design, EU Age of Consent layer (16+), multi-language (EN/CZ) for Regional University Network (RUN) scaling. 
+* **GTM:** School-Led B2B distribution for 8th-10th grade. B2C Freemium for 16+.
+* **Regional Economy Integration:** Real-world regional rewards (e.g., Liberec Cinema).
+* **Compliance:** GDPR-by-Design, EU Age of Consent (16+), RUN Network ready (EN/CZ).
 
 ## 2. Core Mechanics & The Autonomy Framework
-* **3-Stage Timeline:** Year 1-2 (Discovery), Year 3 (Community), Year 4 (Transition).
-* **Autonomy Framework:** Expandable "Pathways" (Universities & Vocational alternatives) with transparent Match Percentages, Pros/Cons, and a Regional Peer Forum.
-* **Pitch-Ready Demo Suite (God Mode):** Built-in tools for live presentations to instantly toggle user age (under 16 vs 16+) and manipulate time/XP (+100 XP button) to show long-term progression and UI adaptation.
+* **Dynamic Age Engine:** * *Under 16 (Junior):* Swipe questions focus on broad skill discovery (e.g., "Do you like fixing things?"). Bridge screen shows general "Theme Matches" (e.g., "You lean towards Tech").
+  * *16+ (Senior):* Swipe questions focus on targeted career/uni choices. Bridge screen shows exact "Pathways" with Pros/Cons and **Actionable Steps (Housing, Deadlines)**.
+* **The 1-Click Regional CV:** 16+ users can instantly generate a Talent Portfolio based on their 4-year swipe data to send to local universities or companies.
+* **God Mode Demo Suite:** Toggles for Age (Junior/Senior), +100 XP, and Reset XP.
 
 ## 3. Screen Specifications & Accessibility
-1. **RoadmapScreen:** 3-Stage Timeline, Pet Evolution (🥚 → 🐣 → 🐥), hidden "+100 XP (Demo)" button, and a "Rewards" modal for digital achievements and real-world perks.
-2. **SwipeScreen:** Gamified UI with vocational scenarios and 'Teaching Style' feedback.
-3. **BridgeScreen:** Pathways accordion (Pros/Cons). If Age = 16+, reveals "Premium Scholarship Matches". Features the Regional Peer Forum at the bottom.
-4. **ImpactScreen & FAQScreen:** B2B Metrics Dashboard and EU Compliance Hub.
-5. **AAA Accessibility:** Includes fixed CSS specificity for Dyslexic font and interactive SVG `<feColorMatrix>` Colorblindness filters.
+1. **RoadmapScreen:** 3-Stage Timeline, Pet Evolution, Rewards modal, +100 XP, and Reset XP buttons.
+2. **SwipeScreen:** Consumes `ageGroup` prop to dynamically load JUNIOR or SENIOR question decks.
+3. **BridgeScreen:** * If Junior: Displays "Skill Themes" and basic community forum.
+   * If Senior: Displays University/Apprenticeship Pathways (Pros/Cons, Actionable Steps), Premium Scholarships, and the "Generate Regional CV" button.
+4. **ImpactScreen & FAQScreen:** B2B Metrics and EU Compliance Hub.
+5. **AAA Accessibility:** Dyslexic font CSS fix and SVG Colorblind filters.

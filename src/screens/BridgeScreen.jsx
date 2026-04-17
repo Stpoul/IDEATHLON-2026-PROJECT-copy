@@ -1,235 +1,306 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, CheckCircle, AlertCircle, MapPin, FileText } from 'lucide-react';
-import { t } from '../i18n';
-import { PATHWAYS, calcMatch } from '../lib/matchEngine';
+import { School, Briefcase, FileText, CheckCircle, AlertTriangle, MessageSquare, ArrowRight, DollarSign, CheckSquare, Square, Wrench, Code, Zap, ChefHat, MapPin, Calendar } from 'lucide-react';
 
-const SKILL_THEMES = [
+// Data Engine: 3 Universities & 3 Vocationals with realistic variable percentages
+const PATHWAYS = [
+  // --- UNIVERSITIES ---
   {
-    id: 'vocational',
-    emoji: '🎯',
-    nameKey: 'bridge_theme_vocational',
-    descKey: 'bridge_theme_vocational_desc',
-    matchCategories: ['Vocational'],
+    id: 1,
+    category: 'university',
+    type: 'Bachelors Degree',
+    title: 'TUL - Mechatronics',
+    match: 94,
+    icon: School,
+    colorClass: 'text-indigo-600 dark:text-indigo-400 bg-indigo-100 dark:bg-indigo-900/40',
+    pros: ['+45% Prefers hands-on projects', '+15% Strong math inclination'],
+    cons: ['-6% Dislikes heavy theory'],
+    steps: [
+      { id: '1a', title: 'Attend Open Days', desc: 'Visit the TUL campus in late November.' },
+      { id: '1b', title: 'Submit Application', desc: 'Electronic submission deadline: March 31.' },
+      { id: '1c', title: 'Prep for Entrance Exams', desc: 'Review high school Physics and Math (June).' },
+      { id: '1d', title: 'Secure Housing', desc: 'Apply for Harcov Dorms (System opens in May).' },
+    ]
   },
   {
-    id: 'pedagogical',
-    emoji: '📚',
-    nameKey: 'bridge_theme_pedagogical',
-    descKey: 'bridge_theme_pedagogical_desc',
-    matchCategories: ['Pedagogical'],
+    id: 2,
+    category: 'university',
+    type: 'Bachelors Degree',
+    title: 'TUL - Economics & Management',
+    match: 78,
+    icon: Briefcase,
+    colorClass: 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/40',
+    pros: ['+30% Leadership & organizational skills'],
+    cons: ['-25% Prefers physical building over desk work'],
+    steps: [
+      { id: '2a', title: 'Research Majors', desc: 'Compare Marketing vs. Corporate Finance tracks.' },
+      { id: '2b', title: 'Submit Application', desc: 'Electronic submission deadline: April 30.' },
+      { id: '2c', title: 'Language Prep', desc: 'Ensure B2 English level for international tracks.' },
+    ]
   },
   {
-    id: 'lifestyle',
-    emoji: '🌍',
-    nameKey: 'bridge_theme_lifestyle',
-    descKey: 'bridge_theme_lifestyle_desc',
-    matchCategories: ['Lifestyle'],
+    id: 3,
+    category: 'university',
+    type: 'Masters Degree',
+    title: 'ČVUT - Software Engineering',
+    match: 62,
+    icon: Code,
+    colorClass: 'text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/40',
+    pros: ['+40% Excellent logic & puzzle solving'],
+    cons: ['-30% Dislikes fully remote/isolated work', '-15% Prefers regional staying (Prague commute)'],
+    steps: [
+      { id: '3a', title: 'Portfolio Build', desc: 'Upload 3 coding projects to GitHub by January.' },
+      { id: '3b', title: 'Submit Application', desc: 'Electronic submission deadline: March 31.' },
+      { id: '3c', title: 'Math Entrance Exam', desc: 'Intensive calculus review required.' },
+    ]
   },
+
+  // --- VOCATIONAL & ALTERNATIVES ---
+  {
+    id: 4,
+    category: 'vocational',
+    type: 'Corporate Apprenticeship',
+    title: 'Škoda Auto - Mechatronic Apprentice',
+    match: 91,
+    icon: Wrench,
+    colorClass: 'text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/40',
+    pros: ['+50% Immediate starting salary', '+35% Highly practical, paid learning'],
+    cons: ['-20% Narrower initial career flexibility', '-10% Potential for shift work'],
+    steps: [
+      { id: '4a', title: 'Factory Tour', desc: 'Register for an open day in Mladá Boleslav.' },
+      { id: '4b', title: 'Submit CV', desc: 'Use Sofia 1-Click CV to apply before Feb 28.' },
+      { id: '4c', title: 'Aptitude Test', desc: 'Complete the online manual dexterity & logic test.' },
+      { id: '4d', title: 'Interview Prep', desc: 'Practice answering teamwork and behavioral questions.' },
+    ]
+  },
+  {
+    id: 5,
+    category: 'vocational',
+    type: 'Intensive Bootcamp',
+    title: 'GreenTech Solar Installation Cert',
+    match: 85,
+    icon: Zap,
+    colorClass: 'text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/40',
+    pros: ['+60% Outdoor & physical work preference', '+20% High regional demand'],
+    cons: ['-15% Seasonal workflow fluctuations'],
+    steps: [
+      { id: '5a', title: 'Information Session', desc: 'Attend the online webinar on November 15.' },
+      { id: '5b', title: 'Safety Certification', desc: 'Complete basic occupational hazards pre-course.' },
+      { id: '5c', title: 'Enrollment Deposit', desc: 'Secure your spot for the Spring cohort.' },
+    ]
+  },
+  {
+    id: 6,
+    category: 'vocational',
+    type: 'Trade Academy',
+    title: 'Turnov Culinary Arts Academy',
+    match: 45,
+    icon: ChefHat,
+    colorClass: 'text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-900/40',
+    pros: ['+25% Creative expression'],
+    cons: ['-40% Stress tolerance lower than required', '-15% Weekend shift requirements'],
+    steps: [
+      { id: '6a', title: 'Kitchen Trial Day', desc: 'Spend 4 hours shadowing a line cook.' },
+      { id: '6b', title: 'Health & Safety Test', desc: 'Pass the food handling hygiene exam.' },
+      { id: '6c', title: 'Submit Application', desc: 'Deadline: May 15.' },
+    ]
+  }
 ];
 
-function calcThemeMatch(theme, swipeResults) {
-  let liked = 0;
-  let total = 0;
-  theme.matchCategories.forEach(cat => {
-    const r = swipeResults[cat];
-    if (r) { liked += r.liked; total += r.total; }
-  });
-  if (total === 0) return 0;
-  return Math.round((liked / total) * 100);
-}
+export default function BridgeScreen({ ageGroup }) {
+  const [expandedId, setExpandedId] = useState(null);
+  const [checkedSteps, setCheckedSteps] = useState({});
+  const [activeTab, setActiveTab] = useState('university'); // 'university' | 'vocational'
 
-function matchColor(pct) {
-  if (pct >= 80) return 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30';
-  if (pct >= 60) return 'text-[var(--primary)] bg-indigo-50 dark:bg-indigo-900/30';
-  if (pct >= 40) return 'text-amber-600 bg-amber-50 dark:bg-amber-900/30';
-  return 'text-red-500 bg-red-50 dark:bg-red-900/30';
-}
+  const isSenior = ageGroup === '16plus';
 
-export default function BridgeScreen({ language, swipeResults, ageGroup }) {
-  const [expanded, setExpanded] = useState(null);
-  const [activeTab, setActiveTab] = useState('university');
-  const [showCvModal, setShowCvModal] = useState(false);
+  const toggleStep = (e, stepId) => {
+    e.stopPropagation();
+    setCheckedSteps(prev => ({ ...prev, [stepId]: !prev[stepId] }));
+  };
 
-  const filtered = PATHWAYS.filter(p => p.type === activeTab);
-  const hasSwipeData = Object.keys(swipeResults).length > 0;
+  const filteredPathways = PATHWAYS.filter(p => p.category === activeTab);
+
+  const handleDownloadCV = () => {
+    const cvContent = `
+=========================================
+      SOFIA REGIONAL TALENT CV
+=========================================
+
+STUDENT PROFILE:
+- Age Group: 16+
+- Top Theme: Tech & Engineering
+- Learning Style: Visual & Hands-on
+
+TOP PATHWAY MATCHES:
+1. Technical University of Liberec (TUL) - Mechatronics (94%)
+2. Škoda Auto - Mechatronic Apprentice (91%)
+
+ACHIEVEMENTS & MILESTONES:
+- Reached Transition Era (Year 4)
+- Consistent 10-Day Swipe Streak
+- Unlocked Regional Independence Badge
+
+Generated via the Sofia platform.
+    `;
+    const blob = new Blob([cvContent], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Sofia_Regional_CV.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
-    <>
-      <div className="flex-1 flex flex-col bg-[var(--background)] p-6 screen-enter">
-        <div className="pt-8 mb-4">
-          <h1 className="text-[var(--foreground)] text-3xl font-[800]">
-            {ageGroup === 'under16' ? t(language, 'bridge_themes_title') : t(language, 'bridge_title')}
-          </h1>
-          <p className="text-[var(--muted-foreground)] text-sm">
-            {ageGroup === 'under16' ? t(language, 'bridge_themes_subtitle') : t(language, 'bridge_subtitle')}
-          </p>
-        </div>
-
-        {ageGroup === 'under16' ? (
-          /* ── JUNIOR VIEW: Skill Themes ── */
-          <div className="flex-1 overflow-y-auto pb-4">
-            {!hasSwipeData ? (
-              <div className="flex flex-col items-center justify-center py-16 text-center">
-                <span className="text-5xl mb-4">🃏</span>
-                <p className="text-sm font-bold text-[var(--foreground)]">{t(language, 'bridge_themes_no_swipes')}</p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {SKILL_THEMES.map(theme => {
-                  const match = calcThemeMatch(theme, swipeResults);
-                  return (
-                    <div key={theme.id} className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-4 shadow-sm">
-                      <div className="flex items-center gap-3 mb-2">
-                        <span className="text-3xl">{theme.emoji}</span>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-bold text-sm text-[var(--foreground)]">{t(language, theme.nameKey)}</p>
-                          <p className="text-[10px] text-[var(--muted-foreground)] mt-0.5 leading-snug">{t(language, theme.descKey)}</p>
-                        </div>
-                        <div className={`px-2.5 py-1 rounded-full text-xs font-bold shrink-0 ${matchColor(match)}`}>
-                          {match}%
-                        </div>
-                      </div>
-                      <div className="h-1.5 bg-[var(--border)] rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-[var(--primary)] rounded-full transition-all duration-500"
-                          style={{ width: `${match}%` }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        ) : (
-          /* ── SENIOR VIEW: University / Vocational Pathways ── */
-          <>
-            <div className="flex bg-[var(--card)] rounded-2xl p-1 border border-[var(--border)] mb-4">
-              {['university', 'vocational'].map(tab => (
-                <button
-                  key={tab}
-                  onClick={() => { setActiveTab(tab); setExpanded(null); }}
-                  className={`flex-1 py-2.5 text-xs font-bold rounded-xl transition-all ${activeTab === tab ? 'bg-[var(--primary)] text-white shadow-sm' : 'text-[var(--muted-foreground)]'}`}
-                >
-                  {t(language, tab === 'university' ? 'bridge_universities' : 'bridge_vocational')}
-                </button>
-              ))}
-            </div>
-
-            <div className="bg-gradient-to-r from-amber-500 to-amber-400 rounded-2xl p-4 mb-3 shadow-md">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-lg">🏆</span>
-                <p className="font-extrabold text-sm text-white">{t(language, 'bridge_scholarship_title')}</p>
-              </div>
-              <p className="text-xs text-white/90 mb-3">{t(language, 'bridge_scholarship_desc')}</p>
-              <button className="bg-white text-amber-600 font-bold text-xs py-2 px-4 rounded-xl active:scale-95 transition-all">
-                {t(language, 'bridge_scholarship_cta')}
-              </button>
-            </div>
-
-            <button
-              onClick={() => setShowCvModal(true)}
-              className="w-full mb-4 flex items-center justify-center gap-2 bg-[var(--primary)] text-white font-bold text-sm py-3.5 rounded-2xl active:scale-95 transition-all shadow-md"
-            >
-              <FileText size={16} /> {t(language, 'bridge_cv_btn')}
-            </button>
-
-            <div className="flex-1 overflow-y-auto space-y-3 pb-4">
-              {filtered.map(pathway => {
-                const match = calcMatch(pathway, swipeResults);
-                const isOpen = expanded === pathway.id;
-                return (
-                  <div key={pathway.id} className="bg-[var(--card)] rounded-2xl border border-[var(--border)] overflow-hidden shadow-sm">
-                    <button
-                      onClick={() => setExpanded(isOpen ? null : pathway.id)}
-                      className="w-full p-4 flex items-center gap-3 text-left active:scale-[0.99] transition-all"
-                    >
-                      <span className="text-3xl">{pathway.emoji}</span>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-bold text-sm text-[var(--foreground)] truncate">
-                          {pathway.name[language] ?? pathway.name.en}
-                        </p>
-                        <div className="flex items-center gap-1 mt-0.5">
-                          <MapPin size={10} className="text-[var(--muted-foreground)]" />
-                          <span className="text-[10px] text-[var(--muted-foreground)]">{pathway.location}</span>
-                        </div>
-                      </div>
-                      <div className={`px-2.5 py-1 rounded-full text-xs font-bold shrink-0 ${matchColor(match)}`}>
-                        {match}% {t(language, 'bridge_match')}
-                      </div>
-                      {isOpen
-                        ? <ChevronUp size={16} className="text-[var(--muted-foreground)] shrink-0" />
-                        : <ChevronDown size={16} className="text-[var(--muted-foreground)] shrink-0" />}
-                    </button>
-
-                    {isOpen && (
-                      <div className="px-4 pb-4 border-t border-[var(--border)] pt-3">
-                        <p className="text-[10px] font-bold uppercase text-emerald-600 tracking-widest mb-2">
-                          {t(language, 'bridge_pros')}
-                        </p>
-                        <ul className="space-y-1.5 mb-4">
-                          {(pathway.pros[language] ?? pathway.pros.en).map((pro, i) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <CheckCircle size={13} className="text-emerald-500 mt-0.5 shrink-0" />
-                              <span className="text-xs text-[var(--foreground)]">{pro}</span>
-                            </li>
-                          ))}
-                        </ul>
-                        <p className="text-[10px] font-bold uppercase text-amber-600 tracking-widest mb-2">
-                          {t(language, 'bridge_cons')}
-                        </p>
-                        <ul className="space-y-1.5">
-                          {(pathway.cons[language] ?? pathway.cons.en).map((con, i) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <AlertCircle size={13} className="text-amber-500 mt-0.5 shrink-0" />
-                              <span className="text-xs text-[var(--foreground)]">{con}</span>
-                            </li>
-                          ))}
-                        </ul>
-
-                        <p className="text-[10px] font-bold uppercase text-indigo-600 dark:text-indigo-400 tracking-widest mb-2 mt-4">
-                          {t(language, 'bridge_steps')}
-                        </p>
-                        <ol className="space-y-1.5">
-                          {(pathway.steps[language] ?? pathway.steps.en).map((step, i) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <span className="text-[10px] font-extrabold text-[var(--primary)] mt-0.5 w-4 shrink-0">{i + 1}.</span>
-                              <span className="text-xs text-[var(--foreground)]">{step}</span>
-                            </li>
-                          ))}
-                        </ol>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </>
-        )}
+    <div className="flex-1 p-6 bg-[var(--background)] screen-enter overflow-y-auto pb-24">
+      <div className="pt-8 mb-6">
+        <h1 className="text-[var(--foreground)] text-3xl font-[800]">
+          {isSenior ? "Your Pathways" : "Your Skill Themes"}
+        </h1>
+        <p className="text-[var(--muted-foreground)] text-sm">
+          {isSenior ? "Data-driven matches for your future" : "What your swipes say about you so far"}
+        </p>
       </div>
 
-      {showCvModal && (
-        <div className="fixed inset-0 bg-black/50 z-[200] flex items-end justify-center backdrop-blur-sm">
-          <div className="bg-[var(--card)] w-full max-w-[448px] p-6 rounded-t-[30px] shadow-2xl">
-            <h2 className="text-xl font-bold mb-3">{t(language, 'bridge_cv_modal_title')}</h2>
-            <p className="text-sm text-[var(--muted-foreground)] mb-6 leading-relaxed">
-              {t(language, 'bridge_cv_modal_body')}
-            </p>
-            <button
-              className="w-full bg-[var(--primary)] text-white font-bold py-3.5 rounded-2xl mb-3 active:scale-95 transition-all"
-              onClick={() => setShowCvModal(false)}
+      {isSenior ? (
+        <>
+          {/* Premium Banner */}
+          <div className="mb-6 p-1 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 shadow-lg">
+            <div className="bg-[var(--card)] rounded-xl p-4 flex items-center justify-between">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">Premium Unlocked</p>
+                <p className="font-bold text-[var(--foreground)] text-sm mt-1">Eligible for TUL Tech Grant</p>
+                <p className="text-xs text-[var(--muted-foreground)]">Estimated 10,000 CZK / semester</p>
+              </div>
+              <DollarSign className="text-amber-500" size={28} />
+            </div>
+          </div>
+
+          {/* Filter Tabs */}
+          <div className="flex bg-[var(--border)] rounded-xl p-1 mb-6">
+            <button 
+              onClick={() => { setActiveTab('university'); setExpandedId(null); }}
+              className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all ${activeTab === 'university' ? 'bg-[var(--card)] text-[var(--foreground)] shadow-sm' : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'}`}
             >
-              {t(language, 'bridge_cv_modal_cta')}
+              Universities
             </button>
-            <button
-              className="w-full border-2 border-[var(--border)] text-[var(--muted-foreground)] font-bold py-3 rounded-2xl active:scale-95 transition-all"
-              onClick={() => setShowCvModal(false)}
+            <button 
+              onClick={() => { setActiveTab('vocational'); setExpandedId(null); }}
+              className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all ${activeTab === 'vocational' ? 'bg-[var(--card)] text-[var(--foreground)] shadow-sm' : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'}`}
             >
-              {t(language, 'bridge_cv_modal_close')}
+              Vocational & Alternative
             </button>
+          </div>
+
+          {/* Dynamic Pathways Accordion */}
+          <div className="space-y-4 mb-8 min-h-[300px]">
+            {filteredPathways.map((pathway) => (
+              <div key={pathway.id} className="bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-sm overflow-hidden transition-all duration-300">
+                <div 
+                  onClick={() => setExpandedId(expandedId === pathway.id ? null : pathway.id)} 
+                  className="p-4 flex items-center justify-between cursor-pointer active:bg-slate-50 dark:active:bg-slate-800/50"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${pathway.colorClass}`}>
+                      <pathway.icon size={24} />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold uppercase text-[var(--muted-foreground)]">{pathway.type}</p>
+                      <p className="text-sm font-bold text-[var(--foreground)]">{pathway.title}</p>
+                    </div>
+                  </div>
+                  <span className="text-lg font-extrabold text-[var(--primary)]">{pathway.match}%</span>
+                </div>
+                
+                {expandedId === pathway.id && (
+                  <div className="px-4 pb-4 border-t border-[var(--border)] bg-slate-50/50 dark:bg-slate-900/20 pt-4 screen-enter">
+                    
+                    {/* Pros and Cons */}
+                    <div className="mb-6">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)] mb-3">Algorithm Match Factors</p>
+                      <div className="space-y-2">
+                        {pathway.pros.map((pro, i) => (
+                          <p key={`pro-${i}`} className="flex items-center gap-2 text-xs font-medium text-[var(--foreground)]">
+                            <CheckCircle size={14} className="text-[var(--success)] shrink-0"/> {pro}
+                          </p>
+                        ))}
+                        {pathway.cons.map((con, i) => (
+                          <p key={`con-${i}`} className="flex items-center gap-2 text-xs font-medium text-[var(--foreground)]">
+                            <AlertTriangle size={14} className="text-[var(--danger)] shrink-0"/> {con}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Interactive Actionable Steps Checklist */}
+                    <div className="bg-[var(--card)] p-4 rounded-xl border border-[var(--border)] shadow-sm">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--muted-foreground)] mb-4">How to Achieve This (Checklist)</p>
+                      <div className="space-y-4">
+                        {pathway.steps.map((step) => {
+                          const isChecked = checkedSteps[step.id] || false;
+                          return (
+                            <div 
+                              key={step.id} 
+                              onClick={(e) => toggleStep(e, step.id)}
+                              className="flex gap-3 items-start cursor-pointer group"
+                            >
+                              <div className={`mt-0.5 shrink-0 transition-colors ${isChecked ? 'text-[var(--success)]' : 'text-[var(--muted-foreground)] group-hover:text-[var(--primary)]'}`}>
+                                {isChecked ? <CheckSquare size={18} /> : <Square size={18} />}
+                              </div>
+                              <div className="flex-1">
+                                <p className={`text-sm font-bold transition-all ${isChecked ? 'text-[var(--muted-foreground)] line-through' : 'text-[var(--foreground)]'}`}>
+                                  {step.title}
+                                </p>
+                                <p className={`text-xs transition-all ${isChecked ? 'text-[var(--muted-foreground)]/50' : 'text-[var(--muted-foreground)]'}`}>
+                                  {step.desc}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <button 
+            onClick={handleDownloadCV}
+            className="w-full mb-8 flex items-center justify-center gap-2 bg-[var(--foreground)] text-[var(--background)] font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-transform"
+          >
+            <FileText size={18} /> Generate 1-Click Regional CV
+          </button>
+        </>
+      ) : (
+        /* JUNIOR VIEW (Under 16) */
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="bg-[var(--card)] p-4 border border-[var(--border)] rounded-2xl flex flex-col items-center text-center">
+            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mb-3"><Briefcase size={20} /></div>
+            <h3 className="font-bold text-sm text-[var(--foreground)]">Builder</h3>
+            <p className="text-xs text-[var(--muted-foreground)] mt-1">You swipe right on hands-on tasks.</p>
+          </div>
+          <div className="bg-[var(--card)] p-4 border border-[var(--border)] rounded-2xl flex flex-col items-center text-center">
+            <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 rounded-full flex items-center justify-center mb-3"><School size={20} /></div>
+            <h3 className="font-bold text-sm text-[var(--foreground)]">Visual Learner</h3>
+            <p className="text-xs text-[var(--muted-foreground)] mt-1">You prefer videos over reading.</p>
           </div>
         </div>
       )}
-    </>
+
+      {/* Regional Peer Forum */}
+      <div className="bg-[var(--primary)] p-6 rounded-3xl text-white shadow-lg">
+        <MessageSquare size={24} className="mb-4 text-white/80" />
+        <h3 className="text-xl font-bold">Regional Peer Forum</h3>
+        <p className="text-white/80 text-xs mt-1">Talk anonymously with local students navigating the exact same choices.</p>
+        <button className="mt-4 w-full bg-white text-[var(--primary)] font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 active:scale-95 transition-transform">
+          Enter Forum <ArrowRight size={16} />
+        </button>
+      </div>
+    </div>
   );
 }
