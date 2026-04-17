@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Sparkles, Users, TrendingUp, CheckCircle2, Lock, ChevronRight, Star, Trophy, Plus, X } from 'lucide-react';
+import { Sparkles, Users, TrendingUp, CheckCircle2, Lock, ChevronRight, Star, Trophy, Plus, X, RotateCcw } from 'lucide-react';
 import { t } from '../i18n';
 import { ACHIEVEMENTS, getEarnedAchievements } from '../lib/achievements';
 
@@ -45,7 +45,7 @@ function getPet(xp) {
   return { emoji: '⭐', msgKey: 'pet_champion' };
 }
 
-export default function RoadmapScreen({ onNavigate, globalXp, onAddXp, language }) {
+export default function RoadmapScreen({ onNavigate, globalXp, onAddXp, onResetXp, language }) {
   const [showRewards, setShowRewards] = useState(false);
   const pet = getPet(globalXp);
   const petLevel = Math.floor(globalXp / 100);
@@ -102,6 +102,13 @@ export default function RoadmapScreen({ onNavigate, globalXp, onAddXp, language 
           >
             <Plus size={15} />
             {t(language, 'rewards_xp_demo')}
+          </button>
+          <button
+            onClick={onResetXp}
+            className="flex-1 flex items-center justify-center gap-2 bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)] font-bold text-xs py-3 rounded-xl active:scale-95 transition-all shadow-sm"
+          >
+            <RotateCcw size={15} />
+            {t(language, 'rewards_reset_xp')}
           </button>
         </div>
 
