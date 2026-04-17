@@ -10,7 +10,7 @@ function matchColor(pct) {
   return 'text-red-500 bg-red-50 dark:bg-red-900/30';
 }
 
-export default function BridgeScreen({ language, swipeResults }) {
+export default function BridgeScreen({ language, swipeResults, ageGroup }) {
   const [expanded, setExpanded] = useState(null);
   const [activeTab, setActiveTab] = useState('university');
 
@@ -34,6 +34,19 @@ export default function BridgeScreen({ language, swipeResults }) {
           </button>
         ))}
       </div>
+
+      {ageGroup === '16plus' && (
+        <div className="bg-gradient-to-r from-amber-500 to-amber-400 rounded-2xl p-4 mb-4 shadow-md">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-lg">🏆</span>
+            <p className="font-extrabold text-sm text-white">{t(language, 'bridge_scholarship_title')}</p>
+          </div>
+          <p className="text-xs text-white/90 mb-3">{t(language, 'bridge_scholarship_desc')}</p>
+          <button className="bg-white text-amber-600 font-bold text-xs py-2 px-4 rounded-xl active:scale-95 transition-all">
+            {t(language, 'bridge_scholarship_cta')}
+          </button>
+        </div>
+      )}
 
       <div className="flex-1 overflow-y-auto space-y-3 pb-4">
         {filtered.map(pathway => {
