@@ -100,6 +100,18 @@ export default function BridgeScreen({ language, swipeResults, ageGroup }) {
                       </li>
                     ))}
                   </ul>
+
+                  <p className="text-[10px] font-bold uppercase text-indigo-600 dark:text-indigo-400 tracking-widest mb-2 mt-4">
+                    {t(language, 'bridge_steps')}
+                  </p>
+                  <ol className="space-y-1.5">
+                    {(pathway.steps[language] ?? pathway.steps.en).map((step, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <span className="text-[10px] font-extrabold text-[var(--primary)] mt-0.5 w-4 shrink-0">{i + 1}.</span>
+                        <span className="text-xs text-[var(--foreground)]">{step}</span>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
               )}
             </div>
