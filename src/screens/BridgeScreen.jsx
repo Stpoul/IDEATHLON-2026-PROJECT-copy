@@ -1,50 +1,29 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, CheckCircle, AlertCircle, MapPin } from 'lucide-react';
+import { ChevronDown, ChevronUp, CheckCircle, AlertCircle, MapPin, FileText } from 'lucide-react';
 import { t } from '../i18n';
 import { PATHWAYS, calcMatch } from '../lib/matchEngine';
 
 const SKILL_THEMES = [
   {
-    id: 'tech',
-    emoji: '💻',
-    nameKey: 'bridge_theme_tech',
-    descKey: 'bridge_theme_tech_desc',
-    matchCategories: ['Technical', 'Logic'],
+    id: 'vocational',
+    emoji: '🎯',
+    nameKey: 'bridge_theme_vocational',
+    descKey: 'bridge_theme_vocational_desc',
+    matchCategories: ['Vocational'],
   },
   {
-    id: 'creative',
-    emoji: '🎨',
-    nameKey: 'bridge_theme_creative',
-    descKey: 'bridge_theme_creative_desc',
-    matchCategories: ['Creative'],
+    id: 'pedagogical',
+    emoji: '📚',
+    nameKey: 'bridge_theme_pedagogical',
+    descKey: 'bridge_theme_pedagogical_desc',
+    matchCategories: ['Pedagogical'],
   },
   {
-    id: 'science',
-    emoji: '🔬',
-    nameKey: 'bridge_theme_science',
-    descKey: 'bridge_theme_science_desc',
-    matchCategories: ['Science'],
-  },
-  {
-    id: 'social',
-    emoji: '🤝',
-    nameKey: 'bridge_theme_social',
-    descKey: 'bridge_theme_social_desc',
-    matchCategories: ['Healthcare', 'Social'],
-  },
-  {
-    id: 'business',
-    emoji: '📈',
-    nameKey: 'bridge_theme_business',
-    descKey: 'bridge_theme_business_desc',
-    matchCategories: ['Business'],
-  },
-  {
-    id: 'outdoors',
-    emoji: '🌲',
-    nameKey: 'bridge_theme_outdoors',
-    descKey: 'bridge_theme_outdoors_desc',
-    matchCategories: ['Outdoors'],
+    id: 'lifestyle',
+    emoji: '🌍',
+    nameKey: 'bridge_theme_lifestyle',
+    descKey: 'bridge_theme_lifestyle_desc',
+    matchCategories: ['Lifestyle'],
   },
 ];
 
@@ -152,7 +131,7 @@ export default function BridgeScreen({ language, swipeResults, ageGroup }) {
               onClick={() => setShowCvModal(true)}
               className="w-full mb-4 flex items-center justify-center gap-2 bg-[var(--primary)] text-white font-bold text-sm py-3.5 rounded-2xl active:scale-95 transition-all shadow-md"
             >
-              📄 {t(language, 'bridge_cv_btn')}
+              <FileText size={16} /> {t(language, 'bridge_cv_btn')}
             </button>
 
             <div className="flex-1 overflow-y-auto space-y-3 pb-4">
