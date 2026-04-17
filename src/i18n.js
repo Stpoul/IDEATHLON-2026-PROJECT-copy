@@ -137,9 +137,12 @@ export const TRANSLATIONS = {
     bridge_scholarship_desc: 'As a 16+ user, you qualify for regional scholarship matching.',
     bridge_scholarship_cta: 'Explore Scholarships',
     bridge_steps: 'Next Steps',
-    // SwipeScreen junior categories
+    // SwipeScreen card categories
     cat_Empathy: 'Empathy',
     cat_Curiosity: 'Curiosity',
+    cat_Vocational: 'Vocational',
+    cat_Pedagogical: 'Pedagogical',
+    cat_Lifestyle: 'Lifestyle',
     // BridgeScreen — under16 Skill Themes view
     bridge_themes_title: 'Your Skill Themes',
     bridge_themes_subtitle: 'Based on your swipes so far',
@@ -302,9 +305,12 @@ export const TRANSLATIONS = {
     bridge_scholarship_desc: 'Jako uživatel 16+ máš nárok na regionální stipendijní párování.',
     bridge_scholarship_cta: 'Prozkoumat stipendia',
     bridge_steps: 'Další kroky',
-    // SwipeScreen junior categories
+    // SwipeScreen card categories
     cat_Empathy: 'Empatie',
     cat_Curiosity: 'Zvídavost',
+    cat_Vocational: 'Odborné zaměření',
+    cat_Pedagogical: 'Styl učení',
+    cat_Lifestyle: 'Životní styl',
     // BridgeScreen — under16 Skill Themes view
     bridge_themes_title: 'Tvá dovednostní témata',
     bridge_themes_subtitle: 'Na základě tvých dosavadních voleb',

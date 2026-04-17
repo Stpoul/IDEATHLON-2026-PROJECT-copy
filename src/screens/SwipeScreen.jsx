@@ -3,40 +3,189 @@ import { Flame, Zap, X, Heart } from 'lucide-react';
 import { t } from '../i18n';
 
 const JUNIOR_DECK = [
-  { e: '🔧', text: { en: 'Do you enjoy fixing things around the house?', cz: 'Baví tě opravovat věci doma?' }, c: 'Technical' },
-  { e: '🎨', text: { en: 'Do you love drawing, painting, or making art?', cz: 'Miluješ kreslení, malování nebo tvorbu umění?' }, c: 'Creative' },
-  { e: '🌱', text: { en: 'Do you care about protecting nature and animals?', cz: 'Záleží ti na ochraně přírody a zvířat?' }, c: 'Outdoors' },
-  { e: '🤝', text: { en: 'Do you enjoy helping friends when they have problems?', cz: 'Baví tě pomáhat přátelům s jejich problémy?' }, c: 'Social' },
-  { e: '🔢', text: { en: 'Do you like solving puzzles and brain teasers?', cz: 'Rád/a řešíš hádanky a hlavolamy?' }, c: 'Logic' },
-  { e: '🧪', text: { en: 'Are you curious about how things work scientifically?', cz: 'Jsi zvídavý/á, jak věci fungují vědecky?' }, c: 'Science' },
-  { e: '💰', text: { en: 'Do you like coming up with ideas to earn money?', cz: 'Rád/a vymýšlíš nápady, jak vydělat peníze?' }, c: 'Business' },
-  { e: '🏥', text: { en: 'Would you enjoy taking care of someone who is sick?', cz: 'Baví tě starat se o nemocné lidi?' }, c: 'Healthcare' },
-  { e: '🖥️', text: { en: 'Do you spend a lot of time using computers or tablets?', cz: 'Trávíš hodně času u počítačů nebo tabletů?' }, c: 'Technical' },
-  { e: '🎭', text: { en: 'Do you enjoy acting, performing, or telling stories?', cz: 'Baví tě hrát divadlo, vystupovat nebo vyprávět příběhy?' }, c: 'Creative' },
-  { e: '📚', text: { en: '"I wish my teachers used more hands-on experiments in class."', cz: '"Přál/a bych si, aby učitelé používali více praktických pokusů."' }, c: 'ts_experiments' },
-  { e: '💡', text: { en: '"I find it easier to learn through videos than lectures."', cz: '"Snáze se učím přes videa než přednášky."' }, c: 'ts_video' },
-  { e: '🖥️', text: { en: '"I learn better when we work in groups rather than alone."', cz: '"Lépe se učím, když pracujeme ve skupinách."' }, c: 'ts_group' },
+  {
+    id: 'j1',
+    e: '🔧',
+    category: 'Vocational',
+    text: {
+      en: 'I enjoy fixing things or taking them apart to see how they work.',
+      cz: 'Rád/a opravuji věci nebo je rozebírám, abych viděl/a, jak fungují.',
+    },
+  },
+  {
+    id: 'j2',
+    e: '📹',
+    category: 'Pedagogical',
+    text: {
+      en: 'I prefer learning by watching a video rather than reading a textbook.',
+      cz: 'Raději se učím sledováním videa než čtením učebnice.',
+    },
+  },
+  {
+    id: 'j3',
+    e: '🎨',
+    category: 'Vocational',
+    text: {
+      en: 'I love coming up with creative ideas for art, writing, or design.',
+      cz: 'Miluju vymýšlení kreativních nápadů pro umění, psaní nebo design.',
+    },
+  },
+  {
+    id: 'j4',
+    e: '👥',
+    category: 'Pedagogical',
+    text: {
+      en: 'I learn better when the teacher lets us work in groups instead of sitting quietly.',
+      cz: 'Lépe se učím, když nám učitel dovolí pracovat ve skupinách místo tiché práce.',
+    },
+  },
+  {
+    id: 'j5',
+    e: '🌲',
+    category: 'Vocational',
+    text: {
+      en: 'I like spending my free time outdoors or working with nature.',
+      cz: 'Rád/a trávím volný čas venku nebo v přírodě.',
+    },
+  },
+  {
+    id: 'j6',
+    e: '🤫',
+    category: 'Pedagogical',
+    text: {
+      en: 'When studying, I need absolute silence to focus properly.',
+      cz: 'Při studiu potřebuji absolutní ticho, abych se dokázal/a soustředit.',
+    },
+  },
+  {
+    id: 'j7',
+    e: '🧩',
+    category: 'Vocational',
+    text: {
+      en: 'I enjoy solving logic puzzles or playing strategy games.',
+      cz: 'Baví mě logické hádanky nebo hraní strategických her.',
+    },
+  },
+  {
+    id: 'j8',
+    e: '🧪',
+    category: 'Pedagogical',
+    text: {
+      en: 'I remember things better when we do hands-on experiments in class.',
+      cz: 'Lépe si pamatuji věci, když děláme praktické pokusy ve třídě.',
+    },
+  },
+  {
+    id: 'j9',
+    e: '🤝',
+    category: 'Vocational',
+    text: {
+      en: 'I like helping my friends solve their personal problems or giving advice.',
+      cz: 'Rád/a pomáhám přátelům řešit jejich osobní problémy nebo jim dávám rady.',
+    },
+  },
+  {
+    id: 'j10',
+    e: '📝',
+    category: 'Pedagogical',
+    text: {
+      en: 'I prefer having frequent short quizzes rather than one massive final exam.',
+      cz: 'Dávám přednost častým krátkým testům před jednou velkou závěrečnou zkouškou.',
+    },
+  },
 ];
 
 const SENIOR_DECK = [
-  { e: '🔧', text: { en: 'Dismantle a radio to see how it works', cz: 'Rozebrat rádio, abys viděl/a jak funguje' }, c: 'Technical' },
-  { e: '🎨', text: { en: 'Design a professional logo for a local business', cz: 'Navrhnout profesionální logo pro místní firmu' }, c: 'Creative' },
-  { e: '🔬', text: { en: 'Perform a chemistry experiment at home', cz: 'Provést chemický pokus doma' }, c: 'Science' },
-  { e: '🏗️', text: { en: 'Create a 3D floor plan for a modern house', cz: 'Vytvořit 3D půdorys moderního domu' }, c: 'Technical' },
-  { e: '🧬', text: { en: 'Study how DNA determines biological traits', cz: 'Studovat, jak DNA určuje biologické vlastnosti' }, c: 'Science' },
-  { e: '🌲', text: { en: 'Work outdoors in a national park or forest', cz: 'Pracovat venku v národním parku nebo lese' }, c: 'Outdoors' },
-  { e: '🏥', text: { en: 'Volunteer at a hospital to assist patients', cz: 'Dobrovolničit v nemocnici a pomáhat pacientům' }, c: 'Healthcare' },
-  { e: '⚖️', text: { en: 'Debate ethics in a modern mock courtroom', cz: 'Diskutovat o etice v simulovaném soudním procesu' }, c: 'Social' },
-  { e: '📊', text: { en: 'Analyze complex data to solve a regional problem', cz: 'Analyzovat komplexní data k řešení regionálního problému' }, c: 'Logic' },
-  { e: '✍️', text: { en: 'Write a short story about a sci-fi adventure', cz: 'Napsat povídku o sci-fi dobrodružství' }, c: 'Creative' },
-  { e: '💊', text: { en: 'Research how medicines are developed and tested', cz: 'Zkoumat, jak se vyvíjejí a testují léky' }, c: 'Healthcare' },
-  { e: '📈', text: { en: 'Launch a small business idea and pitch it to a panel', cz: 'Spustit nápad na malý podnik a prezentovat ho porotě' }, c: 'Business' },
-  { e: '📚', text: { en: '"I wish my teachers used more hands-on experiments in class."', cz: '"Přál/a bych si, aby učitelé používali více praktických pokusů."' }, c: 'ts_experiments' },
-  { e: '💡', text: { en: '"I find it easier to learn through videos than lectures."', cz: '"Snáze se učím přes videa než přednášky."' }, c: 'ts_video' },
-  { e: '🖥️', text: { en: '"I learn better when we work in groups rather than alone."', cz: '"Lépe se učím, když pracujeme ve skupinách."' }, c: 'ts_group' },
-  { e: '📝', text: { en: '"I prefer digital assignments over paper-based ones."', cz: '"Preferuji digitální zadání před papírovými."' }, c: 'ts_digital' },
-  { e: '📱', text: { en: '"I would like more interactive apps like this to help me learn."', cz: '"Chtěl/a bych více interaktivních aplikací jako tato."' }, c: 'ts_apps' },
-  { e: '🧪', text: { en: '"I prefer learning by doing rather than reading from a book."', cz: '"Raději se učím praxí než čtením z knihy."' }, c: 'ts_practical' },
+  {
+    id: 's1',
+    e: '🎓',
+    category: 'Vocational',
+    text: {
+      en: "I want to apply for a 3-year technical bachelor's degree instead of a 5-year master's.",
+      cz: 'Chci se přihlásit na 3letý technický bakalářský obor místo 5letého magistra.',
+    },
+  },
+  {
+    id: 's2',
+    e: '📊',
+    category: 'Pedagogical',
+    text: {
+      en: 'I prefer project-based grading over traditional written exams for my final grade.',
+      cz: 'Dávám přednost hodnocení na základě projektů před tradičními písemnými zkouškami.',
+    },
+  },
+  {
+    id: 's3',
+    e: '🏭',
+    category: 'Vocational',
+    text: {
+      en: 'I am interested in a paid apprenticeship (e.g., at Škoda) straight after high school.',
+      cz: 'Zajímá mě placené odborné učiliště (např. ve Škodě) přímo po střední škole.',
+    },
+  },
+  {
+    id: 's4',
+    e: '💻',
+    category: 'Pedagogical',
+    text: {
+      en: 'I study best when I have access to online recorded lectures to review at my own pace.',
+      cz: 'Nejlépe studuji, když mám přístup k nahraným přednáškám online k přehrání vlastním tempem.',
+    },
+  },
+  {
+    id: 's5',
+    e: '🏠',
+    category: 'Lifestyle',
+    text: {
+      en: 'I am willing to relocate to a different city and live in a student dormitory.',
+      cz: 'Jsem ochoten/ochotna přestěhovat se do jiného města a bydlet na koleji.',
+    },
+  },
+  {
+    id: 's6',
+    e: '👔',
+    category: 'Pedagogical',
+    text: {
+      en: 'I learn better from professors who bring real-world industry experience into the classroom.',
+      cz: 'Lépe se učím od profesorů, kteří přinášejí do výuky zkušenosti z praxe.',
+    },
+  },
+  {
+    id: 's7',
+    e: '💰',
+    category: 'Vocational',
+    text: {
+      en: 'I want a career that prioritizes a high starting salary over flexible working hours.',
+      cz: 'Chci kariéru, která upřednostňuje vysoký nástupní plat před flexibilní pracovní dobou.',
+    },
+  },
+  {
+    id: 's8',
+    e: '📋',
+    category: 'Pedagogical',
+    text: {
+      en: 'I need clear, step-by-step rubrics for assignments rather than open-ended essays.',
+      cz: 'Potřebuji jasná hodnotící kritéria pro úkoly spíše než volná esejová zadání.',
+    },
+  },
+  {
+    id: 's9',
+    e: '🏆',
+    category: 'Lifestyle',
+    text: {
+      en: 'I plan to apply for financial aid or regional scholarships for my higher education.',
+      cz: 'Plánuji žádat o finanční pomoc nebo regionální stipendia pro své vysokoškolské vzdělání.',
+    },
+  },
+  {
+    id: 's10',
+    e: '⚡',
+    category: 'Vocational',
+    text: {
+      en: 'I prefer intensive bootcamps or certificate programs over traditional university lectures.',
+      cz: 'Dávám přednost intenzivním bootcampům nebo certifikačním programům před tradičními univerzitními přednáškami.',
+    },
+  },
 ];
 
 export default function SwipeScreen({ onNavigate, globalStreak, language, onSwipeResult, ageGroup }) {
@@ -46,7 +195,7 @@ export default function SwipeScreen({ onNavigate, globalStreak, language, onSwip
   useEffect(() => { setIdx(0); }, [ageGroup]);
 
   const handleSwipe = (liked) => {
-    onSwipeResult(DECK[idx].c, liked);
+    onSwipeResult(DECK[idx].category, liked);
     if (idx < DECK.length - 1) {
       setIdx(idx + 1);
     } else {
@@ -55,7 +204,7 @@ export default function SwipeScreen({ onNavigate, globalStreak, language, onSwip
   };
 
   const card = DECK[idx];
-  const isTeachingStyle = card.c.startsWith('ts_');
+  const isPedagogical = card.category === 'Pedagogical';
 
   return (
     <div className="flex-1 flex flex-col bg-[var(--background)] screen-enter p-6">
@@ -92,7 +241,7 @@ export default function SwipeScreen({ onNavigate, globalStreak, language, onSwip
         <div className="w-full bg-[var(--card)] rounded-3xl p-8 shadow-xl border border-[var(--border)] text-center transition-colors">
           <div className="text-6xl mb-4">{card.e}</div>
           <span className="text-xs font-bold uppercase tracking-widest text-[var(--primary)] mb-2 block">
-            {isTeachingStyle ? t(language, 'swipe_teaching_label') : t(language, `cat_${card.c}`)}
+            {isPedagogical ? t(language, 'swipe_teaching_label') : t(language, `cat_${card.category}`)}
           </span>
           <p className="text-[var(--foreground)] text-xl font-bold leading-snug">
             {card.text[language] ?? card.text.en}
