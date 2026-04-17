@@ -55,6 +55,7 @@ export default function App() {
   };
 
   const handleAddXp = () => setXp(prev => Math.min(prev + 100, 999));
+  const handleResetXp = () => setXp(0);
 
   const { Screen: ActiveScreen } = TABS.find(tab => tab.id === activeTab);
 
@@ -246,6 +247,7 @@ export default function App() {
               onSwipeResult={handleSwipeResult}
               ageGroup={ageGroup}
               onAddXp={handleAddXp}
+              onResetXp={handleResetXp}
             />
           </main>
 
