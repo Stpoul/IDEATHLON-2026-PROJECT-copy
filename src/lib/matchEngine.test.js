@@ -41,7 +41,7 @@ describe('calcMatch()', () => {
     expect(PATHWAYS).toHaveLength(6);
   });
 
-  it('each pathway has id, type, emoji, name, weights, pros, cons', () => {
+  it('each pathway has id, type, emoji, name, weights, pros, cons, steps', () => {
     PATHWAYS.forEach(p => {
       expect(p).toHaveProperty('id');
       expect(p).toHaveProperty('type');
@@ -51,6 +51,15 @@ describe('calcMatch()', () => {
       expect(p).toHaveProperty('weights');
       expect(p.pros).toHaveProperty('en');
       expect(p.cons).toHaveProperty('en');
+      expect(p.steps).toHaveProperty('en');
+      expect(p.steps).toHaveProperty('cz');
+    });
+  });
+
+  it('each pathway steps has at least 3 items per language', () => {
+    PATHWAYS.forEach(p => {
+      expect(p.steps.en.length).toBeGreaterThanOrEqual(3);
+      expect(p.steps.cz.length).toBeGreaterThanOrEqual(3);
     });
   });
 });
