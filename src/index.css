@@ -46,7 +46,8 @@ html {
   box-shadow: none !important;
 }
 
-.font-dyslexic { font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important; }
+.font-dyslexic,
+.font-dyslexic * { font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif !important; }
 
 /* Colorblindness Filters */
 .filter-protanopia { filter: url('#protanopia'); }
