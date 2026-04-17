@@ -16,6 +16,14 @@ const TABS = [
   { id: 'impact',  key: 'tab_impact',   Icon: BarChart2,     Screen: ImpactScreen  },
 ];
 
+const CB_OPTIONS = [
+  { value: 'none',          labelKey: 'cb_none'          },
+  { value: 'protanopia',    labelKey: 'cb_protanopia'    },
+  { value: 'deuteranopia',  labelKey: 'cb_deuteranopia'  },
+  { value: 'tritanopia',    labelKey: 'cb_tritanopia'    },
+  { value: 'achromatopsia', labelKey: 'cb_achromatopsia' },
+];
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('roadmap');
   const [showAccess, setShowAccess] = useState(false);
@@ -28,6 +36,7 @@ export default function App() {
   const [language, setLanguage] = useState('en');
   const [hasConsent, setHasConsent] = useState(null);
   const [swipeResults, setSwipeResults] = useState({});
+  const [ageGroup, setAgeGroup] = useState('under16');
 
   // Accessibility
   const [darkMode, setDarkMode] = useState(false);
@@ -43,6 +52,8 @@ export default function App() {
     });
   };
 
+  const handleAddXp = () => setXp(prev => Math.min(prev + 100, 999));
+
   const { Screen: ActiveScreen } = TABS.find(tab => tab.id === activeTab);
 
   useEffect(() => {
@@ -57,144 +68,205 @@ export default function App() {
   }, [darkMode, highContrast, dyslexic, textSize, cb]);
 
   return (
-    <div className="bg-slate-200 flex items-center justify-center min-h-[100dvh]">
-      <div className="relative w-full max-w-[448px] h-[100dvh] md:h-[90vh] md:max-h-[800px] mx-auto flex flex-col overflow-hidden bg-[var(--background)] shadow-2xl md:rounded-[40px] text-[var(--foreground)] transition-all">
+    <>
+      {/* SVG colorblind filter matrices — hidden, referenced by CSS filter-* classes */}
+      <svg aria-hidden="true" style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
+        <defs>
+          <filter id="protanopia">
+            <feColorMatrix type="matrix" values="0.567 0.433 0 0 0  0.558 0.442 0 0 0  0 0.242 0.758 0 0  0 0 0 1 0" />
+          </filter>
+          <filter id="deuteranopia">
+            <feColorMatrix type="matrix" values="0.625 0.375 0 0 0  0.7 0.3 0 0 0  0 0.3 0.7 0 0  0 0 0 1 0" />
+          </filter>
+          <filter id="tritanopia">
+            <feColorMatrix type="matrix" values="0.95 0.05 0 0 0  0 0.433 0.567 0 0  0 0.475 0.525 0 0  0 0 0 1 0" />
+          </filter>
+          <filter id="achromatopsia">
+            <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0" />
+          </filter>
+        </defs>
+      </svg>
 
-        {/* Floating Controls */}
-        <div className="absolute top-4 left-4 right-4 z-50 flex justify-between">
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className="p-3 bg-white/90 dark:bg-slate-800 rounded-full shadow-lg border border-slate-200 dark:border-slate-700"
-          >
-            {darkMode ? <Sun size={20} className="text-amber-500" /> : <Moon size={20} className="text-slate-600" />}
-          </button>
-          <button
-            onClick={() => setShowAccess(true)}
-            className="p-3 bg-[var(--primary)] text-white rounded-full shadow-lg"
-          >
-            <UniversalAccessIcon />
-          </button>
-        </div>
+      <div className="bg-slate-200 flex items-center justify-center min-h-[100dvh]">
+        <div className="relative w-full max-w-[448px] h-[100dvh] md:h-[90vh] md:max-h-[800px] mx-auto flex flex-col overflow-hidden bg-[var(--background)] shadow-2xl md:rounded-[40px] text-[var(--foreground)] transition-all">
 
-        {/* Accessibility Modal */}
-        {showAccess && (
-          <div className="absolute inset-0 bg-black/50 z-[100] flex items-end justify-center backdrop-blur-sm">
-            <div className="bg-[var(--card)] w-full p-6 rounded-t-[30px] shadow-2xl max-h-[85%] overflow-y-auto">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold">{t(language, 'settings')}</h2>
-                <button onClick={() => setShowAccess(false)} className="p-2"><X /></button>
-              </div>
-              <div className="grid grid-cols-2 gap-3 mb-6">
-                <button
-                  onClick={() => setHighContrast(!highContrast)}
-                  className={`p-4 rounded-xl border-2 font-bold text-xs ${highContrast ? 'bg-[var(--primary)] text-white' : ''}`}
-                >
-                  {t(language, 'high_contrast')}
-                </button>
-                <button
-                  onClick={() => setDyslexic(!dyslexic)}
-                  className={`p-4 rounded-xl border-2 font-bold text-xs ${dyslexic ? 'bg-[var(--primary)] text-white' : ''}`}
-                >
-                  {t(language, 'dyslexic_font')}
-                </button>
-              </div>
-              <div className="mb-6">
-                <h3 className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3">{t(language, 'font_size')}</h3>
-                <div className="flex gap-2">
-                  {[
-                    { key: 'normal', label: 'font_size_normal' },
-                    { key: 'large',  label: 'font_size_large'  },
-                    { key: 'xlarge', label: 'font_size_xlarge' },
-                  ].map(({ key, label }) => (
-                    <button
-                      key={key}
-                      onClick={() => setTextSize(key)}
-                      className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs ${textSize === key ? 'bg-[var(--primary)] text-white' : ''}`}
-                    >
-                      {t(language, label)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Language */}
-              <div className="mb-6">
-                <h3 className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3">{t(language, 'settings_language')}</h3>
-                <div className="flex gap-2">
-                  {['en', 'cz'].map(lang => (
-                    <button
-                      key={lang}
-                      onClick={() => setLanguage(lang)}
-                      className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs uppercase ${language === lang ? 'bg-[var(--primary)] text-white' : ''}`}
-                    >
-                      {lang}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Consent */}
-              <div className="mb-6">
-                <h3 className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3">{t(language, 'settings_consent')}</h3>
-                <div className="bg-[var(--background)] rounded-xl px-4 py-3 text-xs text-[var(--muted-foreground)] mb-2 border border-[var(--border)]">
-                  {hasConsent === null
-                    ? t(language, 'consent_not_set')
-                    : hasConsent
-                    ? t(language, 'consent_over16_label')
-                    : t(language, 'consent_under16_label')}
-                </div>
-                {hasConsent !== null && (
-                  <button
-                    onClick={() => setHasConsent(null)}
-                    className="w-full py-3 border-2 border-[var(--border)] text-[var(--muted-foreground)] font-bold text-xs rounded-xl active:scale-95 transition-all"
-                  >
-                    {t(language, 'consent_reset')}
-                  </button>
-                )}
-              </div>
-
-              <button
-                onClick={() => { setDarkMode(false); setHighContrast(false); setDyslexic(false); setTextSize('normal'); setCb('none'); }}
-                className="w-full py-4 border-2 border-red-100 text-red-500 font-bold rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all"
-              >
-                <RotateCcw size={18} /> {t(language, 'reset_defaults')}
-              </button>
-            </div>
+          {/* Floating Controls */}
+          <div className="absolute top-4 left-4 right-4 z-50 flex justify-between">
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className="p-3 bg-white/90 dark:bg-slate-800 rounded-full shadow-lg border border-slate-200 dark:border-slate-700"
+            >
+              {darkMode ? <Sun size={20} className="text-amber-500" /> : <Moon size={20} className="text-slate-600" />}
+            </button>
+            <button
+              onClick={() => setShowAccess(true)}
+              className="p-3 bg-[var(--primary)] text-white rounded-full shadow-lg"
+            >
+              <UniversalAccessIcon />
+            </button>
           </div>
-        )}
 
-        <main className="flex-1 overflow-y-auto pt-16">
-          <ActiveScreen
-            onNavigate={setActiveTab}
-            globalXp={xp}
-            globalStreak={streak}
-            language={language}
-            hasConsent={hasConsent}
-            onConsent={setHasConsent}
-            swipeResults={swipeResults}
-            onSwipeResult={handleSwipeResult}
-          />
-        </main>
+          {/* Accessibility Modal */}
+          {showAccess && (
+            <div className="absolute inset-0 bg-black/50 z-[100] flex items-end justify-center backdrop-blur-sm">
+              <div className="bg-[var(--card)] w-full p-6 rounded-t-[30px] shadow-2xl max-h-[85%] overflow-y-auto">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-bold">{t(language, 'settings')}</h2>
+                  <button onClick={() => setShowAccess(false)} className="p-2"><X /></button>
+                </div>
 
-        <nav className="shrink-0 border-t border-[var(--border)] bg-[var(--card)]/80 backdrop-blur-md">
-          <ul className="flex">
-            {TABS.map(({ id, key, Icon }) => (
-              <li key={id} className="flex-1">
+                {/* Visual toggles */}
+                <div className="grid grid-cols-2 gap-3 mb-6">
+                  <button
+                    onClick={() => setHighContrast(!highContrast)}
+                    className={`p-4 rounded-xl border-2 font-bold text-xs ${highContrast ? 'bg-[var(--primary)] text-white' : ''}`}
+                  >
+                    {t(language, 'high_contrast')}
+                  </button>
+                  <button
+                    onClick={() => setDyslexic(!dyslexic)}
+                    className={`p-4 rounded-xl border-2 font-bold text-xs ${dyslexic ? 'bg-[var(--primary)] text-white' : ''}`}
+                  >
+                    {t(language, 'dyslexic_font')}
+                  </button>
+                </div>
+
+                {/* Font size */}
+                <div className="mb-6">
+                  <h3 className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3">{t(language, 'font_size')}</h3>
+                  <div className="flex gap-2">
+                    {[
+                      { key: 'normal', label: 'font_size_normal' },
+                      { key: 'large',  label: 'font_size_large'  },
+                      { key: 'xlarge', label: 'font_size_xlarge' },
+                    ].map(({ key, label }) => (
+                      <button
+                        key={key}
+                        onClick={() => setTextSize(key)}
+                        className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs ${textSize === key ? 'bg-[var(--primary)] text-white' : ''}`}
+                      >
+                        {t(language, label)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Colorblind Mode */}
+                <div className="mb-6">
+                  <h3 className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3">{t(language, 'settings_colorblind')}</h3>
+                  <div className="flex gap-1.5 flex-wrap">
+                    {CB_OPTIONS.map(({ value, labelKey }) => (
+                      <button
+                        key={value}
+                        onClick={() => setCb(value)}
+                        className={`px-3 py-2 rounded-xl border-2 font-bold text-xs ${cb === value ? 'bg-[var(--primary)] text-white' : ''}`}
+                      >
+                        {t(language, labelKey)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Language */}
+                <div className="mb-6">
+                  <h3 className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3">{t(language, 'settings_language')}</h3>
+                  <div className="flex gap-2">
+                    {['en', 'cz'].map(lang => (
+                      <button
+                        key={lang}
+                        onClick={() => setLanguage(lang)}
+                        className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs uppercase ${language === lang ? 'bg-[var(--primary)] text-white' : ''}`}
+                      >
+                        {lang}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Age Group (Demo) */}
+                <div className="mb-6">
+                  <h3 className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3">{t(language, 'settings_age_group')}</h3>
+                  <div className="flex gap-2">
+                    {[
+                      { value: 'under16', labelKey: 'age_under16' },
+                      { value: '16plus',  labelKey: 'age_16plus'  },
+                    ].map(({ value, labelKey }) => (
+                      <button
+                        key={value}
+                        onClick={() => setAgeGroup(value)}
+                        className={`flex-1 py-3 rounded-xl border-2 font-bold text-xs ${ageGroup === value ? 'bg-[var(--primary)] text-white' : ''}`}
+                      >
+                        {t(language, labelKey)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Consent */}
+                <div className="mb-6">
+                  <h3 className="text-[10px] font-bold uppercase text-[var(--muted-foreground)] mb-3">{t(language, 'settings_consent')}</h3>
+                  <div className="bg-[var(--background)] rounded-xl px-4 py-3 text-xs text-[var(--muted-foreground)] mb-2 border border-[var(--border)]">
+                    {hasConsent === null
+                      ? t(language, 'consent_not_set')
+                      : hasConsent
+                      ? t(language, 'consent_over16_label')
+                      : t(language, 'consent_under16_label')}
+                  </div>
+                  {hasConsent !== null && (
+                    <button
+                      onClick={() => setHasConsent(null)}
+                      className="w-full py-3 border-2 border-[var(--border)] text-[var(--muted-foreground)] font-bold text-xs rounded-xl active:scale-95 transition-all"
+                    >
+                      {t(language, 'consent_reset')}
+                    </button>
+                  )}
+                </div>
+
                 <button
-                  onClick={() => setActiveTab(id)}
-                  className="w-full flex flex-col items-center gap-1 py-3 transition-all duration-150 active:scale-95"
+                  onClick={() => { setDarkMode(false); setHighContrast(false); setDyslexic(false); setTextSize('normal'); setCb('none'); }}
+                  className="w-full py-4 border-2 border-red-100 text-red-500 font-bold rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all"
                 >
-                  <Icon size={22} className={activeTab === id ? 'text-[var(--primary)]' : 'text-[var(--muted-foreground)]'} />
-                  <span className={`text-[10px] font-semibold ${activeTab === id ? 'text-[var(--primary)]' : 'text-[var(--muted-foreground)]'}`}>
-                    {t(language, key)}
-                  </span>
+                  <RotateCcw size={18} /> {t(language, 'reset_defaults')}
                 </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
+              </div>
+            </div>
+          )}
+
+          <main className="flex-1 overflow-y-auto pt-16">
+            <ActiveScreen
+              onNavigate={setActiveTab}
+              globalXp={xp}
+              globalStreak={streak}
+              language={language}
+              hasConsent={hasConsent}
+              onConsent={setHasConsent}
+              swipeResults={swipeResults}
+              onSwipeResult={handleSwipeResult}
+              ageGroup={ageGroup}
+              onAddXp={handleAddXp}
+            />
+          </main>
+
+          <nav className="shrink-0 border-t border-[var(--border)] bg-[var(--card)]/80 backdrop-blur-md">
+            <ul className="flex">
+              {TABS.map(({ id, key, Icon }) => (
+                <li key={id} className="flex-1">
+                  <button
+                    onClick={() => setActiveTab(id)}
+                    className="w-full flex flex-col items-center gap-1 py-3 transition-all duration-150 active:scale-95"
+                  >
+                    <Icon size={22} className={activeTab === id ? 'text-[var(--primary)]' : 'text-[var(--muted-foreground)]'} />
+                    <span className={`text-[10px] font-semibold ${activeTab === id ? 'text-[var(--primary)]' : 'text-[var(--muted-foreground)]'}`}>
+                      {t(language, key)}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
