@@ -110,6 +110,7 @@ export const TRANSLATIONS = {
     // Rewards modal
     rewards_btn: 'Rewards',
     rewards_xp_demo: '+100 XP (Demo)',
+    rewards_reset_xp: 'Reset XP',
     rewards_title: 'Your Rewards',
     rewards_achievements: 'Achievements',
     rewards_perks: 'Regional Perks',
@@ -135,6 +136,7 @@ export const TRANSLATIONS = {
     bridge_scholarship_title: 'Premium Scholarship Matches',
     bridge_scholarship_desc: 'As a 16+ user, you qualify for regional scholarship matching.',
     bridge_scholarship_cta: 'Explore Scholarships',
+    bridge_steps: 'Next Steps',
   },
   cz: {
     // Tabs
@@ -247,6 +249,7 @@ export const TRANSLATIONS = {
     // Rewards modal
     rewards_btn: 'Odměny',
     rewards_xp_demo: '+100 XP (Demo)',
+    rewards_reset_xp: 'Resetovat XP',
     rewards_title: 'Vaše odměny',
     rewards_achievements: 'Úspěchy',
     rewards_perks: 'Regionální výhody',
@@ -272,6 +275,7 @@ export const TRANSLATIONS = {
     bridge_scholarship_title: 'Prémiové stipendijní shody',
     bridge_scholarship_desc: 'Jako uživatel 16+ máš nárok na regionální stipendijní párování.',
     bridge_scholarship_cta: 'Prozkoumat stipendia',
+    bridge_steps: 'Další kroky',
   },
 };
 
